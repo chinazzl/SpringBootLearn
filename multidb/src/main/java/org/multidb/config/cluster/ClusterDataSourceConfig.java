@@ -20,6 +20,7 @@ import javax.sql.DataSource;
 @MapperScan(basePackages =ClusterDataSourceConfig.PACKAGE, sqlSessionFactoryRef = "clusterSqlSessionFactory")
 public class ClusterDataSourceConfig {
     static final String PACKAGE = "org.multidb.dao.cluster";
+
     static final String MAPPER_LOCATION = "classpath:mapper/cluster/*.xml";
 
     @Value("${cluster.datasource.url}")
