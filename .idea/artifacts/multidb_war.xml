@@ -1,6 +1,12 @@
 <component name="ArtifactManager">
   <artifact type="war" name="multidb:war">
     <output-path>$PROJECT_DIR$/multidb/target</output-path>
+    <properties id="maven-jee-properties">
+      <options>
+        <module>multidb</module>
+        <packaging>war</packaging>
+      </options>
+    </properties>
     <root id="archive" name="multidb.war">
       <element id="artifact" artifact-name="multidb:war exploded" />
     </root>

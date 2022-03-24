@@ -6,11 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="revierwer" />
+        <module name="droolsBoot" />
         <module name="multidb" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="droolsBoot" target="1.7" />
       <module name="multidb" target="1.6" />
+      <module name="revierwer" target="1.5" />
+      <module name="simpleWebBoot" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
