@@ -1,0 +1,9 @@
+package rules;
+dialect  "mvel"
+
+rule "first"
+    when
+        eval(true)
+    then
+        System.out.println("规则: 已启动规则");
+end
