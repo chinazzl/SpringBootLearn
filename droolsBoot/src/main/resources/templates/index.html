@@ -6,5 +6,38 @@
 </head>
 <body>
 <h1>Index page</h1>
+姓名：<input name="sname" type="text" value="学生姓名"><br/>
+年龄：
+<select name="compare">
+    <option value="1">大于</option>
+    <option value="2">小于</option>
+    <option value="3">等于</option>
+</select>
+<input name="age" type="text"><br/>
+<input id="submit" type="button" value="提交" onclick="ok()">
+<script type="text/javascript">
+    function ok() {
+        alert("xxx");
+        var sname = $("input[name='sname']").val();
+        var compare = $("select[name='compare']").val();
+        var age = $("input[name='age']").val();
+        $.ajax({
+            type: "POST",
+            url: "/rules/simpleRule",
+            data: {'sname': sname, 'compare': compare, 'age': age},
+            success: function (response) {
+                console.log(response);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText);
+                console.log(jqXHR.status);
+                console.log(jqXHR.readyState);
+                console.log(jqXHR.statusText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+        });
+    }
+</script>
 </body>
 </html>
