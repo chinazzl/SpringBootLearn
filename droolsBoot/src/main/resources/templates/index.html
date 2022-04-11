@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" >
 <head>
     <meta charset="UTF-8">
     <title>home</title>
+    <script type="text/javascript" src="/static/vendor/jquery/dist/jquery.js"></script>
 </head>
 <body>
 <h1>Index page</h1>
@@ -17,14 +18,18 @@
 <input id="submit" type="button" value="提交" onclick="ok()">
 <script type="text/javascript">
     function ok() {
-        alert("xxx");
         var sname = $("input[name='sname']").val();
         var compare = $("select[name='compare']").val();
         var age = $("input[name='age']").val();
+        var json = {};
+        json.sname = sname;
+        json.compare = compare;
+        json.age = age;
         $.ajax({
             type: "POST",
-            url: "/rules/simpleRule",
-            data: {'sname': sname, 'compare': compare, 'age': age},
+            url: "/rules/getRule",
+            dataType:"json",
+            data: JSON.stringify(json),
             success: function (response) {
                 console.log(response);
             },

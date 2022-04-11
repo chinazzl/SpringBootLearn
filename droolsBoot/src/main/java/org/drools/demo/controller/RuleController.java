@@ -1,10 +1,13 @@
 package org.drools.demo.controller;
 
+import org.drools.demo.common.Result;
 import org.drools.demo.service.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.Map;
 
@@ -21,11 +24,16 @@ public class RuleController {
     @Autowired
     private RuleService ruleService;
 
-    @RequestMapping(value = "/simpleRule",method = RequestMethod.POST)
-    @ResponseBody
-    public String simpleRule(@RequestBody Map<String,String> map) {
-        System.out.println(map);
-        ruleService.rule();
+    @RequestMapping(value = "/simpleRule")
+    public String simpleRule() {
         return "index";
+    }
+
+    @RequestMapping(value = "/getRule",method = RequestMethod.POST)
+    @ResponseBody
+    public Result getRule(@RequestBody Map<String,String> json) {
+        System.out.println(json);
+        ruleService.rule();
+        return Result.ok(null);
     }
 }
