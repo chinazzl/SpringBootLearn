@@ -29,6 +29,7 @@
             type: "POST",
             url: "/rules/getRule",
             dataType:"json",
+            headers:{"Content-Type":"application/json"},
             data: JSON.stringify(json),
             success: function (response) {
                 console.log(response);
