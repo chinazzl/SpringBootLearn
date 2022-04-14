@@ -31,10 +31,10 @@ public class RuleService {
         List<StudentVO> studentVos = stuDao.findAll();
         System.out.println(studentVos.size());
         String rule = "import org.drools.demo.Entity.vo.StudentVO;\n" +
-                "\n" +
+                "   import java.util.List;\n" +
                 "query \"queryStudentByAge\"\n" +
-                "\n" +
-                "   $stu:StudentVO(%s)" +
+                "   $l:List(size()>0);\n" +
+                "   $stu:StudentVO(%s) from $l\n" +
                 "end";
         String newRule = String.format(rule, param);
         System.out.println(newRule);
