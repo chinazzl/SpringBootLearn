@@ -9,6 +9,7 @@
     input[name='maxAge'] {
         display: none;
     }
+
     label {
         display: none;
     }
@@ -18,10 +19,10 @@
 姓名：<input name="sname" type="text" value="学生姓名"><br/>
 年龄：
 <select name="compare">
-        <option value="1">大于</option>
-        <option value="2">小于</option>
-        <option value="3">等于</option>
-        <option value="4">介于</option>
+    <option value="1">大于</option>
+    <option value="2">小于</option>
+    <option value="3">等于</option>
+    <option value="4">介于</option>
 </select>
 <input name="minAge" type="text"/><label>&nbsp~&nbsp</label>
 <input name="maxAge" type="text"/>
@@ -49,7 +50,11 @@
                 console.log(response);
                 if (response instanceof Object) {
                     if (response.code === 200 && response.data != null) {
-                        $("#rs").html("匹配到规则共 " + response.data.length + "个");
+                        $("#rs").text("匹配到规则共 " + response.data.length + "个");
+                        for (let i = 0; i < response.data.length; i++) {
+                            let stu = response.data[i];
+                            $("#rs").after("<div>"+"id: "+stu.id + ";name: "+stu.name +";age: " + stu.age+"</div>");
+                        }
                     }
                 }
             },
