@@ -1,9 +1,11 @@
 package rules;
 dialect  "mvel"
+import org.drools.demo.Entity.vo.StudentVO;
 
-rule "first"
+rule "getstudents"
     when
-        eval(true)
+        eval(true);
     then
         System.out.println("规则: 已启动规则");
 end
+

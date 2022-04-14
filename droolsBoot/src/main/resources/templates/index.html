@@ -1,35 +1,48 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" >
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <title>home</title>
     <script type="text/javascript" src="/static/vendor/jquery/dist/jquery.js"></script>
 </head>
+<style>
+    input[name='maxAge'] {
+        display: none;
+    }
+    label {
+        display: none;
+    }
+</style>
 <body>
 <h1>Index page</h1>
 姓名：<input name="sname" type="text" value="学生姓名"><br/>
 年龄：
 <select name="compare">
-    <option value="1">大于</option>
-    <option value="2">小于</option>
-    <option value="3">等于</option>
+        <option value="1">大于</option>
+        <option value="2">小于</option>
+        <option value="3">等于</option>
+        <option value="4">介于</option>
 </select>
-<input name="age" type="text"><br/>
+<input name="minAge" type="text"/><label>&nbsp~&nbsp</label>
+<input name="maxAge" type="text"/>
+<br/>
 <input id="submit" type="button" value="提交" onclick="ok()">
 <script type="text/javascript">
     function ok() {
         var sname = $("input[name='sname']").val();
         var compare = $("select[name='compare']").val();
-        var age = $("input[name='age']").val();
+        var maxAge = $("input[name='maxAge']").val();
+        var minAge = $("input[name='minAge']").val();
         var json = {};
         json.sname = sname;
         json.compare = compare;
-        json.age = age;
+        json.maxAge = maxAge;
+        json.minAge = minAge;
         $.ajax({
             type: "POST",
             url: "/rules/getRule",
-            dataType:"json",
-            headers:{"Content-Type":"application/json"},
+            dataType: "json",
+            headers: {"Content-Type": "application/json"},
             data: JSON.stringify(json),
             success: function (response) {
                 console.log(response);
@@ -44,6 +57,16 @@
             }
         });
     }
+
+    $("select[name='compare']").change(function () {
+        if ($("select[name='compare']").val() == 4) {
+            $("input[name='maxAge']").show();
+            $("label").show();
+        } else {
+            $("input[name='maxAge']").hide();
+            $("label").hide();
+        }
+    });
 </script>
 </body>
 </html>
