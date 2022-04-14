@@ -27,6 +27,7 @@
 <input name="maxAge" type="text"/>
 <br/>
 <input id="submit" type="button" value="提交" onclick="ok()">
+<div id="rs"></div>
 <script type="text/javascript">
     function ok() {
         var sname = $("input[name='sname']").val();
@@ -46,6 +47,11 @@
             data: JSON.stringify(json),
             success: function (response) {
                 console.log(response);
+                if (response instanceof Object) {
+                    if (response.code === 200 && response.data != null) {
+                        $("#rs").html("匹配到规则共 " + response.data.length + "个");
+                    }
+                }
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log(jqXHR.responseText);

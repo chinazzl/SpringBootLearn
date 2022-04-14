@@ -1,6 +1,7 @@
 package org.drools.demo.controller;
 
 import org.drools.demo.Entity.bo.StudentBO;
+import org.drools.demo.Entity.vo.StudentVO;
 import org.drools.demo.common.Result;
 import org.drools.demo.service.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -34,14 +36,14 @@ public class RuleController {
     @ResponseBody
     public Result getRule(@RequestBody StudentBO student) {
         System.out.println(student);
-        ruleService.rule(capsulationRule(student));
-        return Result.ok(null);
+        List<StudentVO> ruleList = ruleService.rule(capsulationRule(student));
+        return Result.ok(ruleList);
     }
 
     private String capsulationRule(StudentBO student) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder sb = new StringBuilder("(");
         String compareAgeFlag = student.getCompareAgeFlag();
-        String name = Optional.ofNullable(student.getName()).map(n -> "name ==\"" + n + "\"|| ").orElse("");
+        String name = Optional.ofNullable(student.getName()).map(n -> "name ==\"" + n + "\"&& ").orElse("");
         sb.append(name);
         int minAge = Optional.of(student.getMinAge()).orElse(0);
         int maxAge = Optional.of(student.getMaxAge()).orElse(0);
@@ -56,7 +58,7 @@ public class RuleController {
             } else if ("4".equals(compareAgeFlag)) {
                 compareAge = "age >= " + minAge + " && " + " age <=" + maxAge;
             }
-            sb.append(compareAge);
+            sb.append(compareAge).append(")");
         }
         return sb.toString();
     }

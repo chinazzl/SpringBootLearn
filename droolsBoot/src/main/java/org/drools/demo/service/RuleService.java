@@ -11,6 +11,7 @@ import org.kie.internal.utils.KieHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +28,7 @@ public class RuleService {
     @Autowired
     private IStuDao stuDao;
 
-    public void rule(String param) {
+    public List<StudentVO> rule(String param) {
         List<StudentVO> studentVos = stuDao.findAll();
         System.out.println(studentVos.size());
         String rule = "import org.drools.demo.Entity.vo.StudentVO;\n" +
@@ -44,12 +45,14 @@ public class RuleService {
         KieSession kieSession = build.newKieSession();
         kieSession.insert(studentVos);
         QueryResults queryStudentByAge = kieSession.getQueryResults("queryStudentByAge");
-        for (QueryResultsRow result : queryStudentByAge) {
+        List<StudentVO> result = new ArrayList<>();
+        for (QueryResultsRow queryResultsRow : queryStudentByAge) {
             // 参数是实则知LHS的实体别名，当前的别名是$s @link{advancedQuery.drl}
-            StudentVO student = (StudentVO) result.get("$stu");
+            StudentVO student = (StudentVO) queryResultsRow.get("$stu");
+            result.add(student);
             System.out.println("匹配到有参的query Fact " + student);
         }
         kieSession.dispose();
-        System.out.println();
+        return result;
     }
 }
