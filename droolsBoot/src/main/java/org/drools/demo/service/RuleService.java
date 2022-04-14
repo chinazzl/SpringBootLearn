@@ -30,9 +30,7 @@ public class RuleService {
     public void rule(String param) {
         List<StudentVO> studentVos = stuDao.findAll();
         System.out.println(studentVos.size());
-        String rule = "package rules;\n" +
-                "dialect  \"mvel\"\n" +
-                "import org.drools.demo.Entity.vo.StudentVO;\n" +
+        String rule = "import org.drools.demo.Entity.vo.StudentVO;\n" +
                 "\n" +
                 "query \"queryStudentByAge\"\n" +
                 "\n" +
