@@ -1,5 +1,6 @@
 package org.drools.demo.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.drools.demo.Entity.bo.StudentBO;
 import org.drools.demo.Entity.vo.StudentVO;
 import org.drools.demo.common.Result;
@@ -43,7 +44,7 @@ public class RuleController {
     private String capsulationRule(StudentBO student) {
         StringBuilder sb = new StringBuilder("(");
         String compareAgeFlag = student.getCompareAgeFlag();
-        String name = Optional.ofNullable(student.getName()).map(n -> "name ==\"" + n + "\"&& ").orElse("");
+        String name = Optional.ofNullable(student.getName()).filter(StringUtils::isNotBlank).map(n -> "name ==\"" + n + "\"&& ").orElse("");
         sb.append(name);
         int minAge = Optional.of(student.getMinAge()).orElse(0);
         int maxAge = Optional.of(student.getMaxAge()).orElse(0);

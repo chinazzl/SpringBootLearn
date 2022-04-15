@@ -31,6 +31,7 @@
 <div id="rs"></div>
 <script type="text/javascript">
     function ok() {
+        $("#rs").empty();
         var sname = $("input[name='sname']").val();
         var compare = $("select[name='compare']").val();
         var maxAge = $("input[name='maxAge']").val();
@@ -53,7 +54,7 @@
                         $("#rs").text("匹配到规则共 " + response.data.length + "个");
                         for (let i = 0; i < response.data.length; i++) {
                             let stu = response.data[i];
-                            $("#rs").after("<div>"+"id: "+stu.id + ";name: "+stu.name +";age: " + stu.age+"</div>");
+                            $("#rs").append("<div>"+"id: "+stu.id + ";name: "+stu.name +";age: " + stu.age+"</div>");
                         }
                     }
                 }
