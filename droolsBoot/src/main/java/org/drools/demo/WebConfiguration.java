@@ -8,6 +8,8 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.servlet.config.annotation.*;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.spring5.view.ThymeleafViewResolver;
 
 import java.nio.charset.Charset;
 import java.util.List;
@@ -74,6 +76,18 @@ public class WebConfiguration implements WebMvcConfigurer  {
         configurer.favorPathExtension(false);
     }
 
+    /**
+     * 这个Bean不加也可以
+     * @return
+     */
+    @Bean
+    public ThymeleafViewResolver viewResolver() {
+        ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+        viewResolver.setTemplateEngine(new SpringTemplateEngine());
+        viewResolver.setOrder(1);
+        viewResolver.setViewNames(new String[]{".html",".xhtml"});
+        return viewResolver;
+    }
 
 
 
