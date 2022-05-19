@@ -3,7 +3,9 @@ package org.drools.demo.controller;
 import org.apache.commons.lang3.StringUtils;
 import org.drools.demo.Entity.bo.StudentBO;
 import org.drools.demo.Entity.vo.StudentVO;
+import org.drools.demo.annotation.RateLimiter;
 import org.drools.demo.common.Result;
+import org.drools.demo.enums.LimitType;
 import org.drools.demo.service.RuleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,7 @@ public class RuleController {
     @Autowired
     private RuleService ruleService;
 
+    @RateLimiter(time = 30,count = 5,limitType = LimitType.IP)
     @RequestMapping(value = "/simpleRule")
     public String simpleRule() {
         return "index";
