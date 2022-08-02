@@ -1,0 +1,65 @@
+server:
+  port: 8011
+spring:
+  sharding-sphere:
+    datasource:
+      names: ds0
+      ds0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        jdbcUrl: jdbc:mysql://127.0.0.1/test?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        username: root
+        password: password
+    sharding:
+      tables:
+        orders:
+          #指定orders表的分布情况，配置表在哪个数据库中，表名称是什么（groovy语法）
+          actual-data-nodes: ds0.orders_$->{1..2}
+          #指定orders表里主键id生成策略
+          key-generator:
+            column: id
+            type: SNOWFLAKE
+            #指定分片策略。根据id的奇偶性来判断插入到哪个表
+          table-strategy:
+            # 行表达式分片策略（InlineShardingStrategy）
+            # 对应InlineShardingStrategy。使用Groovy的表达式，提供对SQL语句中的=和IN的分片操作支持，只支持单分片键。
+            # 对于简单的分片算法，可以通过简单的配置使用，从而避免繁琐的Java代码开发
+            # InlineShardingStrategy策略不支持对分片字段采用>=、<=、>、<、BETWEEN查询
+#            inline:
+#              sharding-column: id
+#              algorithm-expression: orders_${id%2+1}
+            # 标准分片策略（StandardShardingStrategy）
+            # 对应StandardShardingStrategy。提供对SQL语句中的=, >, <, >=, <=, IN和BETWEEN AND的分片操作支持。
+            # StandardShardingStrategy只支持单分片键，提供PreciseShardingAlgorithm和RangeShardingAlgorithm两个分片算法。
+            # PreciseShardingAlgorithm是必选的，用于处理=和IN的分片。RangeShardingAlgorithm是可选的，
+            # 用于处理BETWEEN AND, >, <, >=, <=分片，如果不配置RangeShardingAlgorithm，SQL中的BETWEEN AND将按照全库路由处理。
+            standard:
+              sharding-column: id
+              precise-algorithm-class-name: org.basic.config.shardingjdbc.PreciseAlgorithmConfig
+              range-algorithm-class-name: org.basic.config.shardingjdbc.RangeAlgorithmConfig
+            # 复合分片策略（ComplexShardingStrategy）
+            # 对应ComplexShardingStrategy。复合分片策略。
+            # 提供对SQL语句中的=, >, <, >=, <=, IN和BETWEEN AND的分片操作支持。
+            # ComplexShardingStrategy支持多分片键，由于多分片键之间的关系复杂，因此并未进行过多的封装，
+            # 而是直接将分片键值组合以及分片操作符透传至分片算法，完全由应用开发者实现，提供最大的灵活度。
+#            complex:
+#              algorithm-class-name:
+            # Hint分片策略（HintShardingStrategy）
+            #对应HintShardingStrategy。通过Hint指定分片值而非从SQL中提取分片值的方式进行分片的策略。
+#            hint:
+#              algorithm-class-name:
+            # 不分片策略
+            #对应NoneShardingStrategy。不分片的策略。
+#            none:
+    props:
+      sql:
+        show: true
+#      ds1:
+#        type: com.zaxxer.hikari.HikariDataSource
+#        driver-class-name: oracle.jdbc.driver.OracleDriver
+#        url: jdbc:oracle:thin:@localhost:1521:xe
+#        username: root
+#        password: password
+mybatis:
+  type-aliases-package: org.basic.mapper
+
