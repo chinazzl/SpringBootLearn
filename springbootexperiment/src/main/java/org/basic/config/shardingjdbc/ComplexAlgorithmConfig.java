@@ -6,6 +6,7 @@ import org.apache.shardingsphere.api.sharding.complex.ComplexKeysShardingValue;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,10 +54,17 @@ public class ComplexAlgorithmConfig implements ComplexKeysShardingAlgorithm<Comp
     }
 
     private List<String> rangeValueColumnName(Range<Long> rangeIds, List<String> tableNames) {
-        List<String> tbList = new ArrayList<>();
+        Map<Range<Long>,String> pre = new HashMap<>();
+        pre.put(Range.closedOpen(0L,1L),"t_file0");
+        pre.put(Range.atLeast(1L),"t_file1");
         if (!tableNames.contains("t_file_2")) {
-
+            for (Map.Entry<Range<Long>, String> rangeStringEntry : pre.entrySet()) {
+                Range<Long> key = rangeStringEntry.getKey();
+                if (key.isConnected(rangeIds)) {
+                    tableNames.add(rangeStringEntry.getValue());
+                }
+            }
         }
-        return tbList;
+        return tableNames;
     }
 }
