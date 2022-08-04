@@ -5,7 +5,9 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Result;
 import org.apache.ibatis.annotations.Results;
 import org.apache.ibatis.annotations.Select;
+import org.basic.entity.FileInfo;
 import org.basic.entity.Orders;
+import org.basic.entity.T_Dic;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -49,4 +51,40 @@ public interface OrderMapper {
             @Result(property = "amount", column = "amount")
     })
     List<Orders> selectOrderByRangeBetween();
+
+    /**
+     * 测试inline 分片策略
+     * @param fields
+     * @return
+     */
+    @Insert("INSERT INTO t_file (id,storage_type,name) values (#{id},#{storageType},#{name})")
+    int insertFileTb(FileInfo fields);
+
+    @Select("SELECT * FROM t_file WHERE id = 1 and storage_type = 1")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "storageType", column = "storage_type"),
+            @Result(property = "name", column = "name")
+    })
+    List<FileInfo> getFileInfo();
+
+    /**
+     * 测试standard策略和complex策略
+     */
+    @Select("SELECT * FROM t_file WHERE id between 1 and 5")
+    @Results({
+            @Result(property = "id", column = "id"),
+            @Result(property = "storageType", column = "storage_type"),
+            @Result(property = "name", column = "name")
+    })
+    List<FileInfo> getRangeFileInfo();
+
+    /**
+     * 创建广播表
+     * @return
+     */
+    @Insert("insert into t_dict(id,code,k,v) values (#{id},#{code},#{k},#{v})")
+    int insertDefaultDict(T_Dic t_dic);
+
+
 }

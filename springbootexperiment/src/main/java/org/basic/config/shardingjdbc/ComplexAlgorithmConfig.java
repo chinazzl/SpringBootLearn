@@ -46,20 +46,19 @@ public class ComplexAlgorithmConfig implements ComplexKeysShardingAlgorithm<Comp
         }
         // 范围分片,map存放的是指定 查询列的列明集合
         final Map columnNameAndRangeValuesMap = shardingValue.getColumnNameAndRangeValuesMap();
-        Range<Long> range_ids = (Range<Long>) columnNameAndRangeValuesMap.get("id");
-        List<String> rangeList = rangeValueColumnName(range_ids,tableNames);
-        tableNames.addAll(rangeList);
+        Range<Integer> range_ids = (Range<Integer>) columnNameAndRangeValuesMap.get("id");
+        rangeValueColumnName(range_ids,tableNames);
         System.out.printf("路由信息,tableNames：%s, id值：%s, storage_type值：%s%n", tableNames, ids, storage_types);
         return tableNames.isEmpty() ? availableTargetNames : tableNames;
     }
 
-    private List<String> rangeValueColumnName(Range<Long> rangeIds, List<String> tableNames) {
-        Map<Range<Long>,String> pre = new HashMap<>();
-        pre.put(Range.closedOpen(0L,1L),"t_file0");
-        pre.put(Range.atLeast(1L),"t_file1");
+    private List<String> rangeValueColumnName(Range<Integer> rangeIds, List<String> tableNames) {
+        Map<Range<Integer>,String> pre = new HashMap<>();
+        pre.put(Range.closedOpen(0,1),"t_file_0");
+        pre.put(Range.atLeast(1),"t_file_1");
         if (!tableNames.contains("t_file_2")) {
-            for (Map.Entry<Range<Long>, String> rangeStringEntry : pre.entrySet()) {
-                Range<Long> key = rangeStringEntry.getKey();
+            for (Map.Entry<Range<Integer>, String> rangeStringEntry : pre.entrySet()) {
+                Range<Integer> key = rangeStringEntry.getKey();
                 if (key.isConnected(rangeIds)) {
                     tableNames.add(rangeStringEntry.getValue());
                 }
