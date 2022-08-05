@@ -74,6 +74,14 @@
             <artifactId>sharding-jdbc-spring-namespace</artifactId>
             <version>4.1.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.shardingsphere/shardingsphere-sql-parser-oracle -->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-sql-parser-oracle</artifactId>
+            <version>4.1.1</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <dependencyManagement>

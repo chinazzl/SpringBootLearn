@@ -108,4 +108,12 @@ public class AppTest {
         }
         System.out.printf("计数：%d", c);
     }
+
+    /**
+     * 测试关联表
+     */
+    @Test
+    public void testAssociationTOrder() {
+        System.out.println(orderMapper.getTordersWithAssociation());
+    }
 }

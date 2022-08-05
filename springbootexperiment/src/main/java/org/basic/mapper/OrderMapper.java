@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Select;
 import org.basic.entity.FileInfo;
 import org.basic.entity.Orders;
 import org.basic.entity.T_Dic;
+import org.basic.entity.T_Order;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -86,5 +87,11 @@ public interface OrderMapper {
     @Insert("insert into t_dict(id,code,k,v) values (#{id},#{code},#{k},#{v})")
     int insertDefaultDict(T_Dic t_dic);
 
+    @Select("SELECT O.ORDER_ID,ITEM.PRICE FROM T_ORDER O INNER JOIN T_ORDER_ITEM ITEM ON O.ORDER_ID = ITEM.ORDER_ID WHERE O.ORDER_ID = 1")
+    @Results({
+        @Result(property = "orderId",column = "order_id"),
+        @Result(property = "price",column = "price")
+    })
+    List<T_Order> getTordersWithAssociation();
 
 }
