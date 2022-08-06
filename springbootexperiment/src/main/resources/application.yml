@@ -7,15 +7,15 @@ spring:
       ds-master0:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: com.mysql.jdbc.Driver
-        jdbcUrl: jdbc:mysql://49.4.114.32/ds_master_0?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        jdbcUrl: jdbc:mysql://localhost/ds_master_0?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
         username: root
-        password: zzl19920901
+        password: password
       ds-master1:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: com.mysql.jdbc.Driver
-        jdbcUrl: jdbc:mysql://49.4.114.32/ds_master_1?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        jdbcUrl: jdbc:mysql://localhost/ds_master_1?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
         username: root
-        password: zzl19920901
+        password: password
       ds-slave0:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: com.mysql.jdbc.Driver
