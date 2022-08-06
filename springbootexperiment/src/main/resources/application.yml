@@ -82,6 +82,7 @@ spring:
       # 要求向 t_dict 写入数据的时候，将数据同时写 2 个库中的 t_dict 表，查询的时候随便选择一个即可
       broadcast-tables:
         - t_dic
+      # 当 2 个表的路由字段相同的时候，可以设置表关联，可以避免笛卡尔积查询，下面设置 t_order 和 t_order_item 关联
       binding-tables:
         - t_order
         - t_order_item
