@@ -9,7 +9,10 @@ import org.basic.entity.FileInfo;
 import org.basic.entity.Orders;
 import org.basic.entity.T_Dic;
 import org.basic.entity.T_Order;
+import org.basic.entity.User;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -26,7 +29,7 @@ public interface OrderMapper {
     @Insert("INSERT INTO orders(ID,ORDERTYPE,CUSTOMERID,AMOUNT) VALUES (#{id},#{orderType},#{customerId},#{amount})")
     int insert(Orders orders);
 
-    @Select("select * from orders where id = #{id}")
+    @Select(value = "select * from orders where id = #{id}")
     @Results({
             @Result(property = "id", column = "id"),
             @Result(property = "orderType", column = "orderType"),
@@ -55,6 +58,7 @@ public interface OrderMapper {
 
     /**
      * 测试inline 分片策略
+     *
      * @param fields
      * @return
      */
@@ -82,16 +86,36 @@ public interface OrderMapper {
 
     /**
      * 创建广播表
+     *
      * @return
      */
     @Insert("insert into t_dict(id,code,k,v) values (#{id},#{code},#{k},#{v})")
     int insertDefaultDict(T_Dic t_dic);
 
+    /**
+     * 关联表
+     *
+     * @return
+     */
     @Select("SELECT O.ORDER_ID,ITEM.PRICE FROM T_ORDER O INNER JOIN T_ORDER_ITEM ITEM ON O.ORDER_ID = ITEM.ORDER_ID WHERE O.ORDER_ID = 1")
     @Results({
-        @Result(property = "orderId",column = "order_id"),
-        @Result(property = "price",column = "price")
+            @Result(property = "orderId", column = "order_id"),
+            @Result(property = "price", column = "price")
     })
     List<T_Order> getTordersWithAssociation();
+
+    /**
+     * 读写分离
+     *
+     * @param id
+     * @return
+     */
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Select("SELECT ID,NAME FROM T_USER WHERE ID = #{id}")
+    User getUserById(Long id);
+
+    @Transactional(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
+    @Insert("INSERT INTO t_user(ID,NAME) VALUES (#{id},#{name})")
+    int insertUser(User user);
 
 }

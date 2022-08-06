@@ -3,17 +3,29 @@ server:
 spring:
   sharding-sphere:
     datasource:
-      names: ds0
-      ds0:
+      names: ds-master0,ds-master1,ds-slave0,ds-slave1
+      ds-master0:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: com.mysql.jdbc.Driver
-        jdbcUrl: jdbc:mysql://127.0.0.1/test?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        jdbcUrl: jdbc:mysql://49.4.114.32/ds_master_0?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        username: root
+        password: zzl19920901
+      ds-master1:
+        type: com.zaxxer.hikari.HikariDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        jdbcUrl: jdbc:mysql://49.4.114.32/ds_master_1?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        username: root
+        password: zzl19920901
+      ds-slave0:
+        type: com.zaxxer.hikari.HikariDataSource
+        driverClassName: com.mysql.jdbc.Driver
+        jdbcUrl: jdbc:mysql://localhost/ds_slave_0?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
         username: root
         password: password
-      ds1:
+      ds-slave1:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: com.mysql.jdbc.Driver
-        jdbcUrl: jdbc:mysql://127.0.0.1/shirovue?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        jdbcUrl: jdbc:mysql://localhost/ds_slave_1?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
         username: root
         password: password
         # Oracle
@@ -22,17 +34,34 @@ spring:
 #        jdbcUrl: jdbc:oracle:thin:@localhost:1521:xe
 #        username: root
 #        password: password
-
+    # 一主多从
+#    masterslave:
+#      name: ds0,ds1
+#      master-data-source-name: ds-master0,ds-master1
+#      slave-data-source-names:
+#        - ds-slave0
+#        - ds-slave1
     sharding:
+      master-slave-rules:
+        ds0:
+          name: ds-master0
+          master-data-source-name: ds-master0
+          slave-data-source-names:
+            - ds-slave0
+        ds1:
+          name: ds-master1
+          master-data-source-name: ds-master1
+          slave-data-source-names:
+            - ds-slave1
       tables:
-        t_order:
+        t-user:
         # 逻辑表名
-#        t_file:
+#        t-file:
           #指定orders表的分布情况，配置表在哪个数据库中，表名称是什么（groovy语法）
-          actual-data-nodes: ds0.t_order_$->{0..1}
+          actual-data-nodes: ds$->{0..1}.t_user
           #指定orders表里主键id生成策略
           key-generator:
-            column: order_id
+            column: id
             type: SNOWFLAKE
             #指定分片策略。根据id的奇偶性来判断插入到哪个表
           table-strategy:
@@ -41,8 +70,8 @@ spring:
             # 对于简单的分片算法，可以通过简单的配置使用，从而避免繁琐的Java代码开发
             # InlineShardingStrategy策略不支持对分片字段采用>=、<=、>、<、BETWEEN查询
             inline:
-              sharding-column: order_id
-              algorithm-expression: t_order_$->{(order_id+1)%2}
+              sharding-column: id
+              algorithm-expression: ds$->{(id+1)%2}
             # 标准分片策略（StandardShardingStrategy）
             # 对应StandardShardingStrategy。提供对SQL语句中的=, >, <, >=, <=, IN和BETWEEN AND的分片操作支持。
             # StandardShardingStrategy只支持单分片键，提供PreciseShardingAlgorithm和RangeShardingAlgorithm两个分片算法。
@@ -58,7 +87,7 @@ spring:
             # ComplexShardingStrategy支持多分片键，由于多分片键之间的关系复杂，因此并未进行过多的封装，
             # 而是直接将分片键值组合以及分片操作符透传至分片算法，完全由应用开发者实现，提供最大的灵活度。
 #            complex:
-#              sharding-columns: id,storage_type
+#              sharding-columns: id,storage-type
 #              algorithm-class-name: org.basic.config.shardingjdbc.ComplexAlgorithmConfig
 
             # Hint分片策略（HintShardingStrategy） ShardingSphere 使用 ThreadLocal 管理分片键值进行 Hint 强制路由。
@@ -69,23 +98,14 @@ spring:
             # 不分片策略
             #对应NoneShardingStrategy。不分片的策略。
             #            none:
-        t_order_item:
-          actual-data-nodes: ds0.t_order_item_$->{0..1}
-          key-generator:
-            column: id
-            type: SNOWFLAKE
-          table-strategy:
-            inline:
-              sharding-column: order_id
-              algorithm-expression: t_order_item_$->{(order_id +1)%2}
       # 广播表，像标准代码表、字典表
-      # 要求向 t_dict 写入数据的时候，将数据同时写 2 个库中的 t_dict 表，查询的时候随便选择一个即可
+      # 要求向 t-dict 写入数据的时候，将数据同时写 2 个库中的 t-dict 表，查询的时候随便选择一个即可
       broadcast-tables:
         - t_dic
-      # 当 2 个表的路由字段相同的时候，可以设置表关联，可以避免笛卡尔积查询，下面设置 t_order 和 t_order_item 关联
-      binding-tables:
-        - t_order
-        - t_order_item
+      # 当 2 个表的路由字段相同的时候，可以设置表关联，可以避免笛卡尔积查询，下面设置 t-order 和 t-order-item 关联
+    #      binding-tables:
+#        - t-order
+#        - t-order-item
     props:
       sql:
         show: true

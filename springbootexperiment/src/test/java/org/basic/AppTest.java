@@ -6,6 +6,7 @@ import org.apache.shardingsphere.core.strategy.keygen.SnowflakeShardingKeyGenera
 import org.basic.entity.FileInfo;
 import org.basic.entity.Orders;
 import org.basic.entity.T_Dic;
+import org.basic.entity.User;
 import org.basic.mapper.OrderMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,7 +21,6 @@ import java.util.List;
  */
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(classes = App.class)
-@Slf4j
 public class AppTest {
 
     @Autowired
@@ -115,5 +115,17 @@ public class AppTest {
     @Test
     public void testAssociationTOrder() {
         System.out.println(orderMapper.getTordersWithAssociation());
+    }
+
+    /**
+     * 读写分离
+     */
+    @Test
+    public void readAndWrite_part1() {
+        User user = new User();
+        user.setId(3L);
+        user.setName("张三");
+        orderMapper.insertUser(user);
+        System.out.println(orderMapper.getUserById(3L));
     }
 }
