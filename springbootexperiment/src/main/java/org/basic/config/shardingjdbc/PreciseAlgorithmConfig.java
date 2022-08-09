@@ -1,7 +1,7 @@
 package org.basic.config.shardingjdbc;
 
 import com.google.common.collect.Range;
-import groovy.util.logging.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingAlgorithm;
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingValue;
 
