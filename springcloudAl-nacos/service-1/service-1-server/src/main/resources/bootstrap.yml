@@ -1,0 +1,29 @@
+server:
+  port: ${port:9001}
+
+spring:
+  application:
+    name: service-1-server
+  cloud:
+    server-addr: localhost:8848
+    nacos:
+      discovery:
+        server-addr: ${spring.cloud.server-addr}
+        namespace: 5bf3d99b-35dc-4eea-917d-10ee3fa4e030
+      config:
+        server-addr: ${spring.cloud.server-addr}
+        namespace: 5bf3d99b-35dc-4eea-917d-10ee3fa4e030
+        group: AI_NACOS_GROUP
+        file-extension: yml #dataId 是应用的名字 + 后缀的名字
+dubbo:
+  scan:
+    base-packages: com.nacos.simple.server
+  protocol:
+    name: dubbo
+    port: ${dubbo.port:20881}
+  registry:
+    address: nacos://localhost:8848
+  application:
+    qos-enable: false # dubbo 运维服务是否开启
+  consumer: # 是否检查依赖服务
+    check: false

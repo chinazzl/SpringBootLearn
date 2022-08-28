@@ -1,0 +1,46 @@
+package com.alinacos.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+/**********************************
+ * @author zhang zhao lin
+ * @date 2022年08月27日 17:03
+ * @Description:
+ **********************************/
+@RestController
+public class NacosConfigController {
+
+    @Value("${common.message}")
+    private String common;
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @GetMapping("/nacosconfig")
+    public String getNacosConfig() {
+        return common;
+    }
+
+    @GetMapping("/nacosconfig1")
+    public String getNacosConfig1() {
+        String username = applicationContext.getEnvironment().getProperty("common.username");
+        String age = applicationContext.getEnvironment().getProperty("common.age");
+        String sex = applicationContext.getEnvironment().getProperty("common.sex");
+        String address = applicationContext.getEnvironment().getProperty("common.address");
+        return username + ", " + age + ", " + sex + ", " + address;
+    }
+
+    /**
+     * 对外提供服务
+     * @return
+     */
+    @GetMapping("/nacosServer")
+    public String getNacosServer() {
+        return "production be done";
+    }
+
+}

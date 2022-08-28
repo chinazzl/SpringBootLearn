@@ -1,0 +1,18 @@
+server:
+  port: 9002
+
+spring:
+  application:
+    name: service2
+  cloud:
+    nacos:
+      server-addr: localhost:8848
+      discovery:
+        server-addr: ${spring.cloud.nacos.server-addr}
+        namespace: 2799ffc4-4d5a-45ae-bc70-fc723d0aeb3e
+      config:
+        server-addr: ${spring.cloud.nacos.server-addr}
+        namespace: 2799ffc4-4d5a-45ae-bc70-fc723d0aeb3e
+        group: TEST_GROUP
+        file-extension: yml #dataId 是应用的名字 + 后缀的名字
+

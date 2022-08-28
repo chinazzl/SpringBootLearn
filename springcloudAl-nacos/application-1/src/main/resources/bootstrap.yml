@@ -1,0 +1,21 @@
+server:
+  port: ${port:10086}
+  servlet:
+    context-path: /app
+
+spring:
+  application:
+    name: application-1
+  main:
+    allow-bean-definition-overriding: true
+  cloud:
+    server-addr: localhost:8848
+    nacos:
+      discovery:
+        server-addr: ${spring.cloud.server-addr}
+        namespace: 5bf3d99b-35dc-4eea-917d-10ee3fa4e030
+      config:
+        server-addr: ${spring.cloud.server-addr}
+        namespace: 5bf3d99b-35dc-4eea-917d-10ee3fa4e030
+        group: AI_NACOS_GROUP
+        file-extension: yml #dataId 是应用的名字 + 后缀的名字
