@@ -3,6 +3,7 @@ package org.drools.demo;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
-public class WebConfiguration implements WebMvcConfigurer  {
+public class WebConfiguration implements WebMvcConfigurer {
 
 
     @Override
@@ -45,7 +46,7 @@ public class WebConfiguration implements WebMvcConfigurer  {
     }
 
     @Bean
-    public DispatcherServlet dispatcherServlet(){
+    public DispatcherServlet dispatcherServlet() {
         DispatcherServlet dispatcherServlet = new DispatcherServlet();
 
         dispatcherServlet.setThrowExceptionIfNoHandlerFound(true);
@@ -63,6 +64,21 @@ public class WebConfiguration implements WebMvcConfigurer  {
         return converter;
     }
 
+    @Bean
+    public WebMvcConfigurer globalCORSConfig() {
+        return new WebMvcConfigurer() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**")
+                        .allowedOrigins("*")
+                        .allowedMethods("*")
+                        .allowCredentials(true)
+                        .allowedHeaders("*")
+                        .exposedHeaders(HttpHeaders.SET_COOKIE).maxAge(0L);
+            }
+        };
+    }
+
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         WebMvcConfigurer.super.configureMessageConverters(converters);
@@ -78,6 +94,7 @@ public class WebConfiguration implements WebMvcConfigurer  {
 
     /**
      * 这个Bean不加也可以
+     *
      * @return
      */
     @Bean
@@ -85,13 +102,11 @@ public class WebConfiguration implements WebMvcConfigurer  {
         ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
         viewResolver.setTemplateEngine(new SpringTemplateEngine());
         viewResolver.setOrder(1);
-        viewResolver.setViewNames(new String[]{".html",".xhtml"});
+        viewResolver.setViewNames(new String[]{".html", ".xhtml"});
         return viewResolver;
     }
 
-
-
-//    @Bean
+    //    @Bean
 //    public ViewResolver templateResolver() {
 //        InternalResourceViewResolver resolver = new InternalResourceViewResolver();
 //        resolver.setPrefix(VIEW_PREFIX);
