@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -108,14 +109,38 @@ public class BaselineServiceImpl implements IBaselineService {
         System.out.println("分组后的数据" + rangeMap);
         // 获取样本数据，取分布不同区间数据量最多的前三个区间数据作为样本区间
         // rangeMap.asMap().entrySet().stream().map(m -> m.getValue()).filter(c -> c.size() <= 1);
-        List<Double> collect = rangeMap.asMap().entrySet().stream().map(m -> m.getValue())
-                // .sorted(Comparator.comparingInt(Collection::size))
-                .sorted((m1, m2) -> m2.stream().max(Double::compareTo).get().compareTo(m1.stream().max(Double::compareTo).get()))
-                .limit((int) Math.floor(rangeMap.asMap().size() >> 1))
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-        // 移除不需要的样本数据，在这里只需要后三个的区间的数据作为样本数据,目的是保留原有的顺序
-        cpuDatas.removeAll(collect);
+        //List<Double> collect = rangeMap.asMap().entrySet().stream().map(m -> m.getValue())
+        //        // .sorted(Comparator.comparingInt(Collection::size))
+        //        .sorted((m1, m2) -> m2.stream().max(Double::compareTo).get().compareTo(m1.stream().max(Double::compareTo).get()))
+        //        .limit((int) Math.floor(rangeMap.asMap().size() >> 1))
+        //        .flatMap(Collection::stream)
+        //        .collect(Collectors.toList());
+        LinkedList<Collection<Double>> collect = rangeMap.asMap().entrySet().stream().map(m -> m.getValue())
+                .sorted((m1, m2) -> Integer.compare(m2.size(), m1.size()))
+                .collect(Collectors.toCollection(LinkedList::new));
+        System.out.println(collect);
+        Iterator<Collection<Double>> iterator = collect.iterator();
+        List<Collection<Double>> useList = new ArrayList<Collection<Double>>();
+        while (iterator.hasNext()) {
+            Collection<Double> next = iterator.next();
+            if (next.size() == 1) {
+                break;
+            }
+            iterator.remove();
+            useList.add(next);
+        }
+        List<Double> collect1 = collect.stream().flatMap(Collection::stream).collect(Collectors.toList());
+        // 移除不需要的样本数据，在这里只需要后三个的区间的数据作为样本数据
+        cpuDatas.removeAll(collect1);
+        // 如果性能数据均匀分散到各个区间，则进行拆分然后将拆分剩余的数据进行移除。
+        if (useList.size() != 1 && useList.size() > (int) Math.floor(rangeMap.asMap().size() >> 1)) {
+            List<Double> collect2 = useList.stream()
+                    .sorted((m1, m2) -> Integer.compare(m2.size(), m1.size()))
+                    .skip((int) Math.floor(rangeMap.asMap().size() >> 1))
+                    .flatMap(Collection::stream).collect(Collectors.toList());
+            // 移除不需要的样本数据，在这里只需要后三个的区间的数据作为样本数据
+            cpuDatas.removeAll(collect2);
+        }
         System.out.println("过滤后的数据：" + cpuDatas);
         // 滑动窗口，分别计算1~24  2~25 3~ 26 以此类推的标准差
         // 开始计算标准差
@@ -154,6 +179,13 @@ public class BaselineServiceImpl implements IBaselineService {
         downTline.add(down_Tline);
     }
 
+    /**
+     * 滑动窗口计算每k个数据之和
+     *
+     * @param nums
+     * @param k
+     * @return
+     */
     private List<Double[]> slidingWindows(Double[] nums, int k) {
         int right = 0;
         // double[] res = new double[nums.length - k + 1];
