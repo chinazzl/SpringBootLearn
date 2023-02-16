@@ -19,6 +19,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author Julyan
@@ -60,7 +61,7 @@ public class BaselineServiceImpl implements IBaselineService {
         List<Double> downTlines = new ArrayList<>();
         for (String timePeriod : timePeriods) {
             List<BlueOsData> performanceDatas = baselineDao.getPerformanceData(ip, timePeriod);
-            putNumberIntoRanged(performanceDatas,upBaselines,downBaselines,upTlines,downTlines);
+            putNumberIntoRanged(performanceDatas, upBaselines, downBaselines, upTlines, downTlines);
         }
         baselineBO.setxAxis(timePeriods);
         series.setUpBaseline(upBaselines);
@@ -89,7 +90,7 @@ public class BaselineServiceImpl implements IBaselineService {
         // 获取这段时间性能数据的最大值
         Double maxCPU = cpuDatas.stream().max(Double::compareTo).get();
         // 根据样本最大值计算五个区间范围
-        long v = Math.round((maxCPU / 5));
+        long v = Math.round((maxCPU / 5)) == 0 ? 1 : Math.round((maxCPU / 5));
         // 将时间段的性能数据分别分布在不同的区间[0,0+v], [0+v+0.01, 0+v+0.01+v] ...
         Multimap<String, Double> rangeMap = ArrayListMultimap.create();
         for (Double cpu : cpuDatas) {
@@ -104,13 +105,18 @@ public class BaselineServiceImpl implements IBaselineService {
                 rangeName++;
             }
         }
-        System.out.println(rangeMap);
+        System.out.println("分组后的数据" + rangeMap);
         // 获取样本数据，取分布不同区间数据量最多的前三个区间数据作为样本区间
+        // rangeMap.asMap().entrySet().stream().map(m -> m.getValue()).filter(c -> c.size() <= 1);
         List<Double> collect = rangeMap.asMap().entrySet().stream().map(m -> m.getValue())
-                .sorted(Comparator.comparingInt(Collection::size))
-                .limit((int) Math.floor(rangeMap.asMap().size() >> 1)).flatMap(c -> c.stream()).collect(Collectors.toList());
-        // 移除不需要的样本数据，在这里只需要后三个的区间的数据作为样本数据
+                // .sorted(Comparator.comparingInt(Collection::size))
+                .sorted((m1, m2) -> m2.stream().max(Double::compareTo).get().compareTo(m1.stream().max(Double::compareTo).get()))
+                .limit((int) Math.floor(rangeMap.asMap().size() >> 1))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+        // 移除不需要的样本数据，在这里只需要后三个的区间的数据作为样本数据,目的是保留原有的顺序
         cpuDatas.removeAll(collect);
+        System.out.println("过滤后的数据：" + cpuDatas);
         // 滑动窗口，分别计算1~24  2~25 3~ 26 以此类推的标准差
         // 开始计算标准差
         // Double reduce = window.stream().reduce(0.0, Double::sum);
@@ -140,8 +146,8 @@ public class BaselineServiceImpl implements IBaselineService {
         Double baseline_Down = Arrays.stream(windowsData.get(baseline_Index)).min(Double::compareTo).get();
         Double baseline_Up = Arrays.stream(windowsData.get(baseline_Index)).max(Double::compareTo).get();
         Double up_Tline = baseline_Up * (1 + 0.3);
-        Double down_Tline = baseline_Up * (1 - 0.2);
-        System.out.println("下基线是：" + baseline_Down + "，上基线是：" + baseline_Up);
+        Double down_Tline = baseline_Down * (1 - 0.2);
+        System.out.println("下基线是：" + baseline_Down + "，上基线是：" + baseline_Up + "，上容忍线：" + up_Tline + "，下容忍线：" + down_Tline);
         upBaselines.add(baseline_Up);
         downBaselines.add(baseline_Down);
         upTline.add(up_Tline);
