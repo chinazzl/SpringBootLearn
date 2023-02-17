@@ -64,20 +64,21 @@ public class WebConfiguration implements WebMvcConfigurer {
         return converter;
     }
 
-    @Bean
-    public WebMvcConfigurer globalCORSConfig() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**")
-                        .allowedOrigins("*")
-                        .allowedMethods("*")
-                        .allowCredentials(true)
-                        .allowedHeaders("*")
-                        .exposedHeaders(HttpHeaders.SET_COOKIE).maxAge(0L);
-            }
-        };
-    }
+    // @Bean
+    // public WebMvcConfigurer globalCORSConfig() {
+    //     return new WebMvcConfigurer() {
+    //         @Override
+    //         public void addCorsMappings(CorsRegistry registry) {
+    //             registry.addMapping("/**")
+    //                     .allowedOrigins("*")
+    //                     .allowedMethods("*")
+    //                     .allowCredentials(true)
+    //                     .allowedHeaders("*")
+    //                     // .exposedHeaders(HttpHeaders.SET_COOKIE);
+    //                     .exposedHeaders(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN);
+    //         }
+    //     };
+    // }
 
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {

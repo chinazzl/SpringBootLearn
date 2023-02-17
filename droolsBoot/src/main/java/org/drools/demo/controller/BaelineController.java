@@ -1,6 +1,7 @@
 package org.drools.demo.controller;
 
 import org.drools.demo.Entity.bo.BaselineBO;
+import org.drools.demo.common.Result;
 import org.drools.demo.dao.IBaselineDao;
 import org.drools.demo.service.IBaselineService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,8 +43,10 @@ public class BaelineController {
      */
     @RequestMapping("/getbaseline")
     @ResponseBody
-    public BaselineBO getbaseline() {
+    public Result<BaselineBO> getbaseline() {
         String ip = "102.200.218.193";
-       return baselineService.getCpuBaseline(ip);
+        BaselineBO cpuBaseline = baselineService.getCpuBaseline(ip);
+
+        return Result.ok(cpuBaseline);
     }
 }

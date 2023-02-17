@@ -5,25 +5,25 @@ package org.drools.demo.common;
  * @date 2022年04月11日 22:12
  * @Description:
  **********************************/
-public class Result {
+public class Result<T> {
 
     private int code;
 
     private String message;
 
-    private Object data;
+    private T data;
 
     public Result(int code, String message) {
         this.code = code;
         this.message = message;
     }
 
-    public Result(int code, Object data) {
+    public Result(int code, T data) {
         this.code = code;
         this.data = data;
     }
 
-    public Result(Object data) {
+    public Result(T data) {
         this.data = data;
     }
 
@@ -55,7 +55,7 @@ public class Result {
         return data;
     }
 
-    public void setData(Object data) {
+    public void setData(T data) {
         this.data = data;
     }
 }

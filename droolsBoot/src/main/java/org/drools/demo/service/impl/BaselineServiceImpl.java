@@ -55,21 +55,29 @@ public class BaselineServiceImpl implements IBaselineService {
     public BaselineBO getCpuBaseline(String ip) {
         BaselineBO baselineBO = new BaselineBO();
         BaselineBO.Series series = baselineBO.new Series();
-        List<String> timePeriods = baselineDao.getTimePeriod(ip);
         List<Double> upBaselines = new ArrayList<>();
         List<Double> downBaselines = new ArrayList<>();
         List<Double> upTlines = new ArrayList<>();
         List<Double> downTlines = new ArrayList<>();
-        for (String timePeriod : timePeriods) {
-            List<BlueOsData> performanceDatas = baselineDao.getPerformanceData(ip, timePeriod);
-            putNumberIntoRanged(performanceDatas, upBaselines, downBaselines, upTlines, downTlines);
+        try {
+            List<String> timePeriods = baselineDao.getTimePeriod(ip);
+            for (String timePeriod : timePeriods) {
+                List<BlueOsData> performanceDatas = baselineDao.getPerformanceData(ip, timePeriod);
+                putNumberIntoRanged(performanceDatas, upBaselines, downBaselines, upTlines, downTlines);
+            }
+            System.out.println("=========基线计算完毕，等待画图......=============");
+            baselineBO.setxAxis(timePeriods);
+            series.setUpBaseline(upBaselines);
+            series.setDownBaseline(downBaselines);
+            series.setUpTline(upTlines);
+            series.setDownTline(downTlines);
+            baselineBO.setSeries(series);
+            System.out.println("=========基线画图完毕=============");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
-        baselineBO.setxAxis(timePeriods);
-        series.setUpBaseline(upBaselines);
-        series.setDownBaseline(downBaselines);
-        series.setUpTline(upTlines);
-        series.setDownTline(downTlines);
-        baselineBO.setSeries(series);
+
         return baselineBO;
     }
 

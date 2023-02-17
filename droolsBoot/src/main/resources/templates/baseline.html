@@ -9,115 +9,122 @@
 <!--css-->
 <style>
     .main {
-        width: 1000px;
-        height: 1000px;
+        width: 1700px;
+        height: 850px;
     }
 </style>
 <!--js-->
 <script type="text/javascript">
-    $(document).ready(function() {
-        var chartDom = document.getElementById('charts');
-        var myChart = echarts.init(chartDom);
-        var option;
+    $(document).ready(function () {
+        var xAxis = [];
+        var y_upTline = [];
+        var y_downTline = [];
+        var y_upBaseline = [];
+        var y_downBaseline = [];
+        $("#charts").width($(window).width()).height($(window).height());
+        $.ajax({
+            type: "GET",
+            url: "/cpu/getbaseline",
+            dataType: "json",
+            headers: {"Content-Type": "application/json"},
+            timeout: 5 * 60 * 1000,
+            // data: JSON.stringify(json),
+            success: function (response) {
+                console.log(response);
+                if (response instanceof Object) {
+                    if (response.code === 200 && response.data != null) {
+                        // for (let i = 0; i < response.data.length; i++) {
+                        //     let stu = response.data[i];
+                        //     $("#rs").append("<div>"+"id: "+stu.id + ";name: "+stu.name +";age: " + stu.age+"</div>");
+                        // }
+                        xAxis = response.data.xAxis;
+                        y_upTline = response.data.series.upTline;
+                        y_downTline = response.data.series.downTline;
+                        y_upBaseline = response.data.series.upBaseline;
+                        y_downBaseline = response.data.series.downBaseline;
+                        var chartDom = document.getElementById('charts');
+                        var myChart = echarts.init(chartDom);
+                        var option;
 
-        option = {
-            title: {
-                text: 'Stacked Area Chart'
-            },
-            tooltip: {
-                trigger: 'axis',
-                axisPointer: {
-                    type: 'cross',
-                    label: {
-                        backgroundColor: '#6a7985'
+                        option = {
+                            xAxis: {
+                                type: 'category',
+                                data: xAxis
+                            },
+                            yAxis: {
+                                type: 'value'
+                            },
+                            tooltip: {
+                                trigger: 'axis',
+                                axisPointer: {
+                                    type: 'cross',
+                                    label: {
+                                        backgroundColor: '#6a7985'
+                                    }
+                                }
+                            },
+                            dataZoom: [
+                                {
+                                    type: 'slider',
+                                    show: 'true',
+                                    xAxisIndex: [0],
+                                    left: '3%',
+                                    start: 0,
+                                    end: 36
+                                },
+                                {
+                                    type: 'inside',
+                                    yAxisIndex: [0],
+                                    start: 0,
+                                    end: 36
+                                }
+                            ],
+                            legend: {
+                                data: ['upTline', 'downTline', 'upBaseline', 'downBaseline']
+                            },
+                            series: [
+                                {
+                                    name: 'upTline',
+                                    data: y_upTline,
+                                    type: 'line',
+                                    smooth: true
+                                },
+                                {
+                                    name: 'downTline',
+                                    data: y_downTline,
+                                    type: 'line',
+                                    smooth: true
+                                },
+                                {
+                                    name: 'upBaseline',
+                                    data: y_upBaseline,
+                                    type: 'line',
+                                    smooth: true
+                                },
+                                {
+                                    name: 'downBaseline',
+                                    data: y_downBaseline,
+                                    type: 'line',
+                                    smooth: true
+                                },
+                            ]
+                        };
+
+                        option && myChart.setOption(option);
                     }
                 }
             },
-            legend: {
-                data: ['Email', 'Union Ads', 'Video Ads', 'Direct', 'Search Engine']
-            },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
-                }
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: [
-                {
-                    type: 'category',
-                    boundaryGap: false,
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                }
-            ],
-            yAxis: [
-                {
-                    type: 'value'
-                }
-            ],
-            series: [
-                {
-                    name: 'Email',
-                    type: 'line',
-                    stack: 'Total',
-                    areaStyle: {},
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: [120, 132, 101, 134, 90, 230, 210]
-                },
-                {
-                    name: 'Union Ads',
-                    type: 'line',
-                    stack: 'Total',
-                    areaStyle: {},
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: [220, 182, 191, 234, 290, 330, 310]
-                },
-                {
-                    name: 'Video Ads',
-                    type: 'line',
-                    stack: 'Total',
-                    areaStyle: {},
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: [150, 232, 201, 154, 190, 330, 410]
-                },
-                {
-                    name: 'Direct',
-                    type: 'line',
-                    stack: 'Total',
-                    areaStyle: {},
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: [320, 332, 301, 334, 390, 330, 320]
-                },
-                {
-                    name: 'Search Engine',
-                    type: 'line',
-                    stack: 'Total',
-                    label: {
-                        show: true,
-                        position: 'top'
-                    },
-                    areaStyle: {},
-                    emphasis: {
-                        focus: 'series'
-                    },
-                    data: [820, 932, 901, 934, 1290, 1330, 1320]
-                }
-            ]
-        };
-        option && myChart.setOption(option);
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.log(jqXHR.responseText);
+                console.log(jqXHR.status);
+                console.log(jqXHR.readyState);
+                console.log(jqXHR.statusText);
+                console.log(textStatus);
+                console.log(errorThrown);
+            }
+        });
     });
+
 </script>
 <!--content-->
 <body>
