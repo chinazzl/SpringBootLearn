@@ -21,113 +21,156 @@
         var y_downTline = [];
         var y_upBaseline = [];
         var y_downBaseline = [];
-        $("#charts").width($(window).width()).height($(window).height());
-        $.ajax({
-            type: "GET",
-            url: "/cpu/getbaseline",
-            dataType: "json",
-            headers: {"Content-Type": "application/json"},
-            timeout: 5 * 60 * 1000,
-            // data: JSON.stringify(json),
-            success: function (response) {
-                console.log(response);
-                if (response instanceof Object) {
-                    if (response.code === 200 && response.data != null) {
-                        // for (let i = 0; i < response.data.length; i++) {
-                        //     let stu = response.data[i];
-                        //     $("#rs").append("<div>"+"id: "+stu.id + ";name: "+stu.name +";age: " + stu.age+"</div>");
-                        // }
-                        xAxis = response.data.xAxis;
-                        y_upTline = response.data.series.upTline;
-                        y_downTline = response.data.series.downTline;
-                        y_upBaseline = response.data.series.upBaseline;
-                        y_downBaseline = response.data.series.downBaseline;
-                        var chartDom = document.getElementById('charts');
-                        var myChart = echarts.init(chartDom);
-                        var option;
+        var realCpu = [];
+        $("#charts").width($(window).width()).height($(window).height()-$("#ip").height());
+        var ip ;
+        $("select").change(function(){
+            console.log(ip);
+            ip = $(this).val();
+            $.ajax({
+                type: "GET",
+                url: "/cpu/getbaseline?ip="+ ip,
+                dataType: "json",
+                headers: {"Content-Type": "application/json"},
+                timeout: 5 * 60 * 1000,
+                // data: JSON.stringify(json),
+                success: function (response) {
+                    console.log(response);
+                    if (response instanceof Object) {
+                        if (response.code === 200 && response.data != null) {
+                            // for (let i = 0; i < response.data.length; i++) {
+                            //     let stu = response.data[i];
+                            //     $("#rs").append("<div>"+"id: "+stu.id + ";name: "+stu.name +";age: " + stu.age+"</div>");
+                            // }
+                            xAxis = response.data.xAxis;
+                            y_upTline = response.data.series.upTline;
+                            y_downTline = response.data.series.downTline;
+                            y_upBaseline = response.data.series.upBaseline;
+                            y_downBaseline = response.data.series.downBaseline;
+                            var chartDom = document.getElementById('charts');
+                            var myChart = echarts.init(chartDom);
+                            var option;
 
-                        option = {
-                            xAxis: {
-                                type: 'category',
-                                data: xAxis
-                            },
-                            yAxis: {
-                                type: 'value'
-                            },
-                            tooltip: {
-                                trigger: 'axis',
-                                axisPointer: {
-                                    type: 'cross',
-                                    label: {
-                                        backgroundColor: '#6a7985'
+                            option = {
+                                xAxis: {
+                                    type: 'category',
+                                    data: xAxis
+                                },
+                                yAxis: {
+                                    type: 'value'
+                                },
+                                tooltip: {
+                                    trigger: 'axis',
+                                    axisPointer: {
+                                        type: 'cross',
+                                        label: {
+                                            backgroundColor: '#6a7985'
+                                        }
                                     }
-                                }
-                            },
-                            dataZoom: [
-                                {
-                                    type: 'slider',
-                                    show: 'true',
-                                    xAxisIndex: [0],
-                                    left: '3%',
-                                    start: 0,
-                                    end: 36
                                 },
-                                {
-                                    type: 'inside',
-                                    yAxisIndex: [0],
-                                    start: 0,
-                                    end: 36
-                                }
-                            ],
-                            legend: {
-                                data: ['upTline', 'downTline', 'upBaseline', 'downBaseline']
-                            },
-                            series: [
-                                {
-                                    name: 'upTline',
-                                    data: y_upTline,
-                                    type: 'line',
-                                    smooth: true
+                                dataZoom: [
+                                    {
+                                        type: 'slider',
+                                        show: 'true',
+                                        xAxisIndex: [0],
+                                        left: '3%',
+                                        start: 0,
+                                        end: 36
+                                    },
+                                    {
+                                        type: 'inside',
+                                        yAxisIndex: [0],
+                                        start: 0,
+                                        end: 36
+                                    }
+                                ],
+                                legend: {
+                                    data: ['upTline', 'downTline', 'upBaseline', 'downBaseline']
                                 },
-                                {
-                                    name: 'downTline',
-                                    data: y_downTline,
-                                    type: 'line',
-                                    smooth: true
-                                },
-                                {
-                                    name: 'upBaseline',
-                                    data: y_upBaseline,
-                                    type: 'line',
-                                    smooth: true
-                                },
-                                {
-                                    name: 'downBaseline',
-                                    data: y_downBaseline,
-                                    type: 'line',
-                                    smooth: true
-                                },
-                            ]
-                        };
+                                series: [
+                                    {
+                                        name: 'upTline',
+                                        data: y_upTline,
+                                        type: 'line',
+                                        smooth: true
+                                    },
+                                    {
+                                        name: 'downTline',
+                                        data: y_downTline,
+                                        type: 'line',
+                                        smooth: true
+                                    },
+                                    {
+                                        name: 'upBaseline',
+                                        data: y_upBaseline,
+                                        type: 'line',
+                                        smooth: true
+                                    },
+                                    {
+                                        name: 'downBaseline',
+                                        data: y_downBaseline,
+                                        type: 'line',
+                                        smooth: true
+                                    }
+                                ]
+                            };
 
-                        option && myChart.setOption(option);
+                            option && myChart.setOption(option);
+                        }
                     }
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    console.log(jqXHR.responseText);
+                    console.log(jqXHR.status);
+                    console.log(jqXHR.readyState);
+                    console.log(jqXHR.statusText);
+                    console.log(textStatus);
+                    console.log(errorThrown);
                 }
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR.responseText);
-                console.log(jqXHR.status);
-                console.log(jqXHR.readyState);
-                console.log(jqXHR.statusText);
-                console.log(textStatus);
-                console.log(errorThrown);
-            }
-        });
+            });
+
+        })
+
     });
 
 </script>
 <!--content-->
+
 <body>
+<div id="ip" style="width: 1000px;height: auto">
+    <select id="selip" name="选择ip">
+<!--        <option value="107.200.34.86">107.200.34.86</option>-->
+<!--        <option value="107.17.128.193">107.17.128.193</option>-->
+<!--        <option value="102.200.192.211">102.200.192.211</option>-->
+<!--        <option value="107.196.0.128">107.196.0.128</option>-->
+<!--        <option value="107.200.34.39">107.200.39.233</option>-->
+    </select>
+    <script type="text/javascript">
+        $(function () {
+            var ips = ["102.200.166.156",
+                "102.200.194.44",
+                "107.200.51.247",
+                " 172.20.8.16",
+                "102.200.224.118",
+                "107.200.50.120",
+                "124.1.1.211",
+                "102.200.194.166",
+                "102.200.218.193",
+                "102.200.202.245",
+                "107.200.39.164",
+                "102.200.245.40",
+                "107.200.38.228",
+                "102.200.139.243",
+                "102.200.211.198",
+                "107.200.32.23",
+                "102.200.217.39"
+            ]
+            for (var i = 0; i < ips.length; i++) {
+                $("select").append("<option value='"+ips[i]+"'>"+ips[i]+"</option>")
+            }
+        })
+    </script>
+</div>
 <div id="charts" class="main">
 </div>
 </body>
