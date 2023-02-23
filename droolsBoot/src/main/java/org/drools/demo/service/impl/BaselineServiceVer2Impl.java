@@ -11,7 +11,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -110,17 +109,17 @@ public class BaselineServiceVer2Impl implements IBaselineService {
         // =================================================================
         List<Double[]> useList = new ArrayList<Double[]>();
         // 计算中位数
-        int middleNum = 0;
+        double middleNum = 0;
         if (collect.size() % 2 == 0) {
-            middleNum = (collect.get((collect.size() -1 )/ 2).length + collect.get((collect.size() - 1) / 2 + 1).length) / 2;
+            middleNum = Math.ceil((collect.get((collect.size()-1)/2).length + collect.get((collect.size() / 2)).length) / 2.0);
         } else {
             if (collect.size() == 1) {
                 middleNum = 1;
             } else {
-                middleNum = (collect.get((collect.size() -1 ) / 2 + 1).length) / 2;
+                middleNum = Math.ceil((collect.get((collect.size() / 2 )).length) / 2.0);
             }
         }
-        System.out.printf("中位数为：%d \n",middleNum);
+        System.out.printf("中位数为：%f \n",middleNum);
         // 过滤小于中位数的集合。
         for (Double[] ds : collect) {
             if (ds.length < middleNum) {
@@ -242,6 +241,8 @@ public class BaselineServiceVer2Impl implements IBaselineService {
             }
         }
         Double[] doubles = Stream.of(d).filter(Objects::nonNull).toArray(Double[]::new);
-        container.add(doubles);
+        if (doubles.length > 0) {
+            container.add(doubles);
+        }
     }
 }
