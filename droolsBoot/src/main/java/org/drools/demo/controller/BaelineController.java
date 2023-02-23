@@ -5,6 +5,7 @@ import org.drools.demo.common.Result;
 import org.drools.demo.dao.IBaselineDao;
 import org.drools.demo.service.IBaselineService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class BaelineController {
 
     @Autowired
+    @Qualifier("baslineVer2")
     private IBaselineService baselineService;
 
     @RequestMapping("/index")

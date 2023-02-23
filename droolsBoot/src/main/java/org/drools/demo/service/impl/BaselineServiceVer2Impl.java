@@ -1,7 +1,5 @@
 package org.drools.demo.service.impl;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Multimap;
 import org.drools.demo.Entity.bo.BaselineBO;
 import org.drools.demo.Entity.po.BlueOsData;
 import org.drools.demo.dao.IBaselineDao;
@@ -25,32 +23,15 @@ import java.util.stream.Stream;
 /**
  * @author Julyan
  * @version V1.0
- * @Date: 2023/2/15 15:27
+ * @Date: 2023/2/23 10:50
  * @Description:
  */
-@Service
-public class BaselineServiceImpl implements IBaselineService {
+@Service("baslineVer2")
+public class BaselineServiceVer2Impl implements IBaselineService {
 
     @Autowired
     private IBaselineDao baselineDao;
 
-    /**
-     * {
-     * "xAxis": [
-     * "xxx",
-     * "xxx"
-     * ],
-     * "series": {
-     * "upTline": [],
-     * "downTline": [],
-     * "upBaseline": [],
-     * "downBaseline": []
-     * }
-     * }
-     *
-     * @param ip
-     * @return
-     */
     @Override
     public BaselineBO getCpuBaseline(String ip) {
         BaselineBO baselineBO = new BaselineBO();
@@ -63,6 +44,7 @@ public class BaselineServiceImpl implements IBaselineService {
             List<String> timePeriods = baselineDao.getTimePeriod(ip);
             for (String timePeriod : timePeriods) {
                 List<BlueOsData> performanceDatas = baselineDao.getPerformanceData(ip, timePeriod);
+                System.out.printf("%s，timePeriod：%s",ip,timePeriod );
                 putNumberIntoRanged(performanceDatas, upBaselines, downBaselines, upTlines, downTlines);
             }
             System.out.println("=========基线计算完毕，等待画图......=============");
@@ -101,54 +83,60 @@ public class BaselineServiceImpl implements IBaselineService {
         // 根据样本最大值计算五个区间范围
         long v = Math.round((maxCPU / 5)) == 0 ? 1 : Math.round((maxCPU / 5));
         // 将时间段的性能数据分别分布在不同的区间[0,0+v], [0+v+0.01, 0+v+0.01+v] ...
-        Multimap<String, Double> rangeMap = ArrayListMultimap.create();
-        for (Double cpu : cpuDatas) {
-            int start = 0, rangeName = 1;
-            double rangeStart = 0.0;
-            while (rangeStart < Math.ceil(maxCPU)) {
-                if (cpu >= rangeStart + 0.01 && cpu <= (int) (rangeStart + v)) {
-                    rangeMap.put(String.valueOf(rangeName), cpu);
-                    break;
-                }
-                rangeStart = rangeStart + v;
-                rangeName++;
+        List<Double> sorted = cpuDatas.stream().sorted(Double::compareTo).collect(Collectors.toList());
+        List<Double[]> container = new ArrayList<Double[]>();
+        // 区间取数法
+        ranger(container, sorted, v, 1, v);
+        System.out.println("分组后的数据（排序前）: ");
+        // =================================================================
+        for (Double[] ds : container) {
+            for (Double d : ds) {
+                System.out.print(d + ",");
             }
+            System.out.println();
         }
-        System.out.println("分组后的数据" + rangeMap);
-        // 获取样本数据，取分布不同区间数据量最多的前三个区间数据作为样本区间
-        // rangeMap.asMap().entrySet().stream().map(m -> m.getValue()).filter(c -> c.size() <= 1);
-        //List<Double> collect = rangeMap.asMap().entrySet().stream().map(m -> m.getValue())
-        //        // .sorted(Comparator.comparingInt(Collection::size))
-        //        .sorted((m1, m2) -> m2.stream().max(Double::compareTo).get().compareTo(m1.stream().max(Double::compareTo).get()))
-        //        .limit((int) Math.floor(rangeMap.asMap().size() >> 1))
-        //        .flatMap(Collection::stream)
-        //        .collect(Collectors.toList());
-        LinkedList<Collection<Double>> collect = rangeMap.asMap().entrySet().stream().map(m -> m.getValue())
-                .sorted((m1, m2) -> Integer.compare(m2.size(), m1.size()))
+        // =================================================================
+        LinkedList<Double[]> collect = container.stream()
+                .sorted(Comparator.comparingInt(m -> m.length))
                 .collect(Collectors.toCollection(LinkedList::new));
-        System.out.println(collect);
-        Iterator<Collection<Double>> iterator = collect.iterator();
-        List<Collection<Double>> useList = new ArrayList<Collection<Double>>();
-        while (iterator.hasNext()) {
-            Collection<Double> next = iterator.next();
-            if (next.size() == 1) {
-                break;
+        System.out.println("分组后的数据（排序后）: ");
+        // =================================================================
+        for (Double[] ds : collect) {
+            for (Double d : ds) {
+                System.out.print(d + ",");
             }
-            iterator.remove();
-            useList.add(next);
+            System.out.println();
         }
-        List<Double> collect1 = collect.stream().flatMap(Collection::stream).collect(Collectors.toList());
-        // 移除不需要的样本数据，在这里只需要后三个的区间的数据作为样本数据
-        cpuDatas.removeAll(collect1);
-        // 如果性能数据均匀分散到各个区间，则进行拆分然后将拆分剩余的数据进行移除。
-        if (useList.size() != 1 && useList.size() > (int) Math.floor(rangeMap.asMap().size() >> 1)) {
-            List<Double> collect2 = useList.stream()
-                    .sorted((m1, m2) -> Integer.compare(m2.size(), m1.size()))
-                    .skip((int) Math.floor(rangeMap.asMap().size() >> 1))
-                    .flatMap(Collection::stream).collect(Collectors.toList());
-            // 移除不需要的样本数据，在这里只需要后三个的区间的数据作为样本数据
-            cpuDatas.removeAll(collect2);
+        // =================================================================
+        List<Double[]> useList = new ArrayList<Double[]>();
+        // 计算中位数
+        int middleNum = 0;
+        if (collect.size() % 2 == 0) {
+            middleNum = (collect.get((collect.size() -1 )/ 2).length + collect.get((collect.size() - 1) / 2 + 1).length) / 2;
+        } else {
+            if (collect.size() == 1) {
+                middleNum = 1;
+            } else {
+                middleNum = (collect.get((collect.size() -1 ) / 2 + 1).length) / 2;
+            }
         }
+        System.out.printf("中位数为：%d \n",middleNum);
+        // 过滤小于中位数的集合。
+        for (Double[] ds : collect) {
+            if (ds.length < middleNum) {
+                useList.add(ds);
+            }
+        }
+        // =================================================================
+        System.out.println("需要删除小于中位数的样本数：");
+        for (Double[] ds : useList) {
+            for (Double d : ds) {
+                System.out.print(d + ",");
+            }
+            System.out.println();
+        }
+        // =================================================================
+        cpuDatas.removeAll(useList.stream().flatMap(Stream::of).collect(Collectors.toList()));
         System.out.println("过滤后的数据：" + cpuDatas);
         // 滑动窗口，分别计算1~24  2~25 3~ 26 以此类推的标准差
         // 开始计算标准差
@@ -228,5 +216,32 @@ public class BaselineServiceImpl implements IBaselineService {
     private double roundDouble(double val, int scale) {
         BigDecimal b = new BigDecimal(String.valueOf(val));
         return b.setScale(scale, BigDecimal.ROUND_HALF_UP).doubleValue();
+    }
+
+    /**
+     * 区间取数算法
+     *
+     * @param container 存储结果的容器
+     * @param ds        从小到大排序后的数据
+     * @param k         递增步数
+     * @param start     起始 0
+     * @param close     闭区间临界值 k * start
+     * @return
+     */
+    private void ranger(List<Double[]> container, List<Double> ds, long k, long start, long close) {
+        Double[] d = new Double[ds.size()];
+        Iterator<Double> iterator = ds.iterator();
+        int i = 0;
+        while (iterator.hasNext() && !ds.isEmpty()) {
+            Double next = iterator.next();
+            if (next > close) {
+                ranger(container, ds, k, ++start, k * start);
+            } else {
+                d[i++] = next;
+                iterator.remove();
+            }
+        }
+        Double[] doubles = Stream.of(d).filter(Objects::nonNull).toArray(Double[]::new);
+        container.add(doubles);
     }
 }
