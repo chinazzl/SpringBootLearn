@@ -21,7 +21,7 @@
         var y_downTline = [];
         var y_upBaseline = [];
         var y_downBaseline = [];
-        var realCpu = [];
+        var y_realCpu = [];
         $("#charts").width($(window).width()).height($(window).height()-$("#ip").height());
         var ip ;
         $("select").change(function(){
@@ -47,6 +47,7 @@
                             y_downTline = response.data.series.downTline;
                             y_upBaseline = response.data.series.upBaseline;
                             y_downBaseline = response.data.series.downBaseline;
+                            y_realCpu = response.data.series.realCpu;
                             var chartDom = document.getElementById('charts');
                             var myChart = echarts.init(chartDom);
                             var option;
@@ -85,30 +86,36 @@
                                     }
                                 ],
                                 legend: {
-                                    data: ['upTline', 'downTline', 'upBaseline', 'downBaseline']
+                                    data: ['上容忍线', '下容忍线', '上基线', '下基线','CPU使用率']
                                 },
                                 series: [
                                     {
-                                        name: 'upTline',
+                                        name: '上容忍线',
                                         data: y_upTline,
                                         type: 'line',
                                         smooth: true
                                     },
                                     {
-                                        name: 'downTline',
+                                        name: '下容忍线',
                                         data: y_downTline,
                                         type: 'line',
                                         smooth: true
                                     },
                                     {
-                                        name: 'upBaseline',
+                                        name: '上基线',
                                         data: y_upBaseline,
                                         type: 'line',
                                         smooth: true
                                     },
                                     {
-                                        name: 'downBaseline',
+                                        name: '下基线',
                                         data: y_downBaseline,
+                                        type: 'line',
+                                        smooth: true
+                                    },
+                                    {
+                                        name: 'CPU使用率',
+                                        data: y_realCpu,
                                         type: 'line',
                                         smooth: true
                                     }
@@ -147,7 +154,7 @@
     </select>
     <script type="text/javascript">
         $(function () {
-            var ips = ["102.200.166.156",
+            var ips = [/*"102.200.166.156",
                 "102.200.194.44",
                 "107.200.51.247",
                 " 172.20.8.16",
@@ -163,7 +170,11 @@
                 "102.200.139.243",
                 "102.200.211.198",
                 "107.200.32.23",
-                "102.200.217.39"
+                "102.200.217.39"*/
+                "--请选择--",
+                "107.200.34.86",
+                "107.200.34.39",
+                "107.17.128.193"
             ]
             for (var i = 0; i < ips.length; i++) {
                 $("select").append("<option value='"+ips[i]+"'>"+ips[i]+"</option>")

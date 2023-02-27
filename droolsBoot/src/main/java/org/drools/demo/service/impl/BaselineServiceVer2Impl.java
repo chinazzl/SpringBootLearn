@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,8 +40,11 @@ public class BaselineServiceVer2Impl implements IBaselineService {
         List<Double> downBaselines = new ArrayList<>();
         List<Double> upTlines = new ArrayList<>();
         List<Double> downTlines = new ArrayList<>();
+        // List<Double> realCpus = new ArrayList<>();
         try {
             List<String> timePeriods = baselineDao.getTimePeriod(ip);
+            // 获取真实cpu使用率
+            List<String> realCpusInfos = baselineDao.getRealCpus(ip);
             for (String timePeriod : timePeriods) {
                 List<BlueOsData> performanceDatas = baselineDao.getPerformanceData(ip, timePeriod);
                 System.out.printf("%s，timePeriod：%s",ip,timePeriod );
@@ -52,6 +56,7 @@ public class BaselineServiceVer2Impl implements IBaselineService {
             series.setDownBaseline(downBaselines);
             series.setUpTline(upTlines);
             series.setDownTline(downTlines);
+            series.setRealCpu(realCpusInfos);
             baselineBO.setSeries(series);
             System.out.println("=========基线画图完毕=============");
         } catch (Exception e) {
