@@ -1,0 +1,23 @@
+server:
+  port: 8088
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: template
+  cloud:
+    nacos:
+      discovery:
+        username: nacos
+        password: nacos
+        server-addr: localhost:8848
+        namespace: c2991198-c08e-4f6c-b1cb-036782ab5896
+      config:
+        username: nacos
+        password: nacos
+        server-addr: localhost:8848
+        namespace: c2991198-c08e-4f6c-b1cb-036782ab5896
+        group: TEMPLATE
+        file-extension: yaml
+        refresh-enabled: true
