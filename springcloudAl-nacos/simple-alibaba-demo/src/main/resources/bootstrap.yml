@@ -1,0 +1,24 @@
+server:
+  port: 9000
+spring:
+  application:
+    name: alibaba-demo
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 49.4.114.32:8848
+        namespace: 5bf3d99b-35dc-4eea-917d-10ee3fa4e030
+    sentinel:
+      log:
+        dir: D:\IdeaProjects\SpringBootLearn\sentinal-log
+      transport:
+        dashboard: localhost:8858
+      web-context-unify: false
+feign:
+  sentinel:
+    enabled: true
+  client:
+    config:
+      default:
+        connect-timeout: 1000
+        read-timeout: 1000

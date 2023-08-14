@@ -4,31 +4,22 @@ package org.multidb.entity;
  * Created by Felix on 2017/7/12.
  */
 public class Teacher {
-    private String tname;
-    private String tage;
-    private String tsex;
+    private String sid;
+    private byte[] image;
 
-    public String getTname() {
-        return tname;
+    public String getSid() {
+        return sid;
     }
 
-    public void setTname(String tname) {
-        this.tname = tname;
+    public void setSid(String sid) {
+        this.sid = sid;
     }
 
-    public String getTage() {
-        return tage;
+    public byte[] getImage() {
+        return image;
     }
 
-    public void setTage(String tage) {
-        this.tage = tage;
-    }
-
-    public String getTsex() {
-        return tsex;
-    }
-
-    public void setTsex(String tsex) {
-        this.tsex = tsex;
+    public void setImage(byte[] image) {
+        this.image = image;
     }
 }

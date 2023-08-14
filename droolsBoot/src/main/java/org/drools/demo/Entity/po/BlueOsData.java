@@ -5,6 +5,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 
 /**
  * @author Julyan
@@ -14,7 +15,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "BLUE_OS_DATA")
-public class BlueOsData {
+public class BlueOsData implements Serializable {
 
     @Id
     @Column(name = "id", nullable = false)
@@ -23,10 +24,10 @@ public class BlueOsData {
     @Column(name = "ip", nullable = true)
     private String ip;
 
-    @Column(name = "dataTime", nullable = true)
+    @Column(name = "datatime", nullable = true)
     private String dataTime;
 
-    @Column(name = "totalUsage", nullable = true)
+    @Column(name = "totalusage", nullable = true)
     private Double totalUsage;
 
     public String getIp() {

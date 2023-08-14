@@ -1,0 +1,10 @@
+server:
+  port: 9090
+spring:
+  application:
+    name: server-3
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 49.4.114.32:8848
+        namespace: 5bf3d99b-35dc-4eea-917d-10ee3fa4e030

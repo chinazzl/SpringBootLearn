@@ -7,31 +7,31 @@ spring:
       ds-master0:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: com.mysql.jdbc.Driver
-        jdbcUrl: jdbc:mysql://49.4.114.32/ds_master_0?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        jdbcUrl: jdbc:mysql://49.4.114.32/ds_master_0?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
         username: root
         password: zzl19920901
       ds-master1:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: com.mysql.jdbc.Driver
-        jdbcUrl: jdbc:mysql://49.4.114.32/ds_master_1?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        jdbcUrl: jdbc:mysql://49.4.114.32/ds_master_1?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
         username: root
         password: zzl19920901
       ds-slave0:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: com.mysql.jdbc.Driver
-        jdbcUrl: jdbc:mysql://localhost/ds_slave_0?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        jdbcUrl: jdbc:mysql://localhost/ds_slave_0?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
         username: root
         password: password
       ds-slave1:
         type: com.zaxxer.hikari.HikariDataSource
         driverClassName: com.mysql.jdbc.Driver
-        jdbcUrl: jdbc:mysql://localhost/ds_slave_1?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+        jdbcUrl: jdbc:mysql://localhost/ds_slave_1?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
         username: root
         password: password
         # Oracle
 #        type: com.zaxxer.hikari.HikariDataSource
 #        driverClassName: oracle.jdbc.OracleDriver
-#        jdbcUrl: jdbc:oracle:thin:@49.4.114.32:1521:xe
+#        jdbcUrl: jdbc:oracle:thin:@localhost:1521:xe
 #        username: root
 #        password: password
     # 一主多从
@@ -46,11 +46,15 @@ spring:
         ds0:
           name: ds-master0
           master-data-source-name: ds-master0
+          # 读写分离配置
+          load-balance-algorithm-type: round_robin
           slave-data-source-names:
             - ds-slave0
         ds1:
           name: ds-master1
           master-data-source-name: ds-master1
+          # 读写分离配置
+          load-balance-algorithm-type: round_robin
           slave-data-source-names:
             - ds-slave1
       tables:
@@ -64,7 +68,7 @@ spring:
           table-strategy:
             inline:
               sharding-column: id
-              algorithm-expression: ds$->{(id+1)%2}
+              algorithm-expression: orders
         t-user:
         # 逻辑表名
 #        t-file:

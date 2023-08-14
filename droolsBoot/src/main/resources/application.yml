@@ -10,8 +10,12 @@ spring:
             charset: UTF-8
             enabled: true
     datasource:
-        url: jdbc:mysql://127.0.0.1/test?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
-        driver-class-name: com.mysql.jdbc.Driver
+#        url: jdbc:mysql://127.0.0.1/test?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=false
+#        driver-class-name: com.mysql.jdbc.Driver
+#        username: root
+#        password: password
+        url: jdbc:oracle:thin:@localhost:1521:xe
+        driver-class-name: oracle.jdbc.OracleDriver
         username: root
         password: password
     jpa:
@@ -19,7 +23,8 @@ spring:
             hibernate:
                 hbm2ddl:
                     auto: update
-                dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+#                dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+                dialect: org.hibernate.dialect.Oracle10gDialect
         show-sql: true
 
     thymeleaf:

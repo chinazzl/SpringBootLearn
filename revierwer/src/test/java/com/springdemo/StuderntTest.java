@@ -1,3 +1,5 @@
+package com.springdemo;
+
 import org.iocode.service.StudentService;
 import org.junit.Test;
 import org.springframework.context.ApplicationContext;
@@ -13,7 +15,6 @@ public class StuderntTest {
         ApplicationContext applicationContext = new ClassPathXmlApplicationContext("application.xml");
         StudentService studentService = (StudentService) applicationContext.getBean("studentService");
         studentService.hello("11");
-
-
     }
+    
 }

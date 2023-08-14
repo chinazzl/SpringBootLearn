@@ -56,7 +56,7 @@ public class BaselineServiceVer2Impl implements IBaselineService {
             series.setDownBaseline(downBaselines);
             series.setUpTline(upTlines);
             series.setDownTline(downTlines);
-            series.setRealCpu(realCpusInfos);
+            //series.setRealCpu(realCpusInfos);
             baselineBO.setSeries(series);
             System.out.println("=========基线画图完毕=============");
         } catch (Exception e) {
@@ -168,15 +168,18 @@ public class BaselineServiceVer2Impl implements IBaselineService {
         }
         // 取出最小的标准差作为当前时间的基线标准。
         Integer baseline_Index = deviations.stream().min(Double::compareTo).map(d -> deviations.indexOf(d)).get();
+        Double baseline_deviation = deviations.stream().min(Double::compareTo).get();
+        System.out.println("基线平方差：" + baseline_deviation);
         Double baseline_Down = Arrays.stream(windowsData.get(baseline_Index)).min(Double::compareTo).get();
         Double baseline_Up = Arrays.stream(windowsData.get(baseline_Index)).max(Double::compareTo).get();
-        Double up_Tline = baseline_Up * (1 + 0.3);
-        Double down_Tline = baseline_Down * (1 - 0.2);
+        Double up_Tline = baseline_Up  + 3 * baseline_deviation;
+        Double down_Tline = baseline_Down  - 3 * baseline_deviation;
         System.out.println("下基线是：" + baseline_Down + "，上基线是：" + baseline_Up + "，上容忍线：" + up_Tline + "，下容忍线：" + down_Tline);
         upBaselines.add(baseline_Up);
         downBaselines.add(baseline_Down);
         upTline.add(up_Tline);
         downTline.add(down_Tline);
+
     }
 
     /**

@@ -123,7 +123,7 @@ public class AppTest {
     @Test
     public void readAndWrite_part1() {
         User user = new User();
-        user.setId(3L);
+        user.setId(5L);
         user.setName("张三");
         orderMapper.insertUser(user);
         System.out.println(orderMapper.getUserById(3L));

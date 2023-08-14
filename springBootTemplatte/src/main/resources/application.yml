@@ -4,9 +4,11 @@ server:
 spring:
   datasource: # 数据源的相关配置
     type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
-    driver-class-name: com.mysql.jdbc.Driver # mysql驱动
+#    driver-class-name: com.mysql.jdbc.Driver # mysql驱动
+    driver-class-name: oracle.jdbc.driver.OracleDriver # mysql驱动
 #    url: jdbc:mysql://49.4.114.32:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
-    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+#    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    url: jdbc:oracle:thin:@localhost:1521:xe
     username: root
 #    password: zzl19920901
     password: password
@@ -19,6 +21,9 @@ spring:
       pool-name: DateSourceHikariCP # 连接池名字
       max-lifetime: 1800000 # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟
       connection-test-query: SELECT 1
+
+#kafka:
+#  bootstrap-server: 192.168.43.201:9092
 ############################################################
 # #mybatis 配置
 # #
@@ -26,3 +31,7 @@ spring:
 mybatis:
   type-aliases-package: com.template.pojo # 所有POJO类所在包路径
   mapper-locations: classpath:mappings/*.xml # mapper映射文件
+logging:
+  level:
+    sql: debug
+    org.template.mapper: debug

@@ -1,6 +1,7 @@
 package org.template.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,4 +17,6 @@ import java.util.Map;
 public interface UserMapper {
 
     void batchUser(List<Map<String,String>> users);
+
+    void insertUserByMybatisBatch(@Param("user") Map<String,String> user);
 }

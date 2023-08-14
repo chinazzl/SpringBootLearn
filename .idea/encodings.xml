@@ -1,9 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
+    <file url="file://$PROJECT_DIR$/CURD" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/CURD/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/CURD/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ali.cloud-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/ali.cloud-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/demo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/demo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/droolsBoot/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/droolsBoot/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jpaDemo" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jpaDemo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/jpaDemo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/multidb" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/multidb/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/multidb/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/revierwer/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/revierwer/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simpleWebBoot/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/simpleWebBoot/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springBootTemplatte/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springBootTemplatte/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springbootexperiment/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springbootexperiment/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/application-1/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/application-1/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-1/service-1-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-1/service-1-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-1/service-1-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-1/service-1-server/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-1/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-1/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-2/service-2-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-2/service-2-api/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-2/service-2-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-2/service-2-server/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-2/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-2/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-3/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/service-3/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/simple-alibaba-demo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/simple-alibaba-demo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/simpledemo/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/simpledemo/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springcloudAl-nacos/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/xxl-job-admin/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/xxl-job-admin/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/xxl-job-core/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/xxl-job-core/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/xxl-job-executor-samples/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/xxl-job-executor-samples/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/xxl-job-executor-samples/xxl-job-executor-sample-frameless/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/xxl-job-executor-samples/xxl-job-executor-sample-frameless/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/xxl-job-2.3.1/xxl-job-executor-samples/xxl-job-executor-sample-springboot/src/main/resources" charset="UTF-8" />
   </component>
 </project>
