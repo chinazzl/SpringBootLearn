@@ -5,7 +5,7 @@ package org.template.enums;
  * @date 2023年08月14日 14:43
  * @Description:
  **********************************/
-public enum ConditionType {
+public enum Condition {
     /**
      * 等价查询
      */
@@ -13,5 +13,7 @@ public enum ConditionType {
     /**
      * 模糊查询
      */
-    LIKE;
+    LIKE,
+    AND,
+    OR;
 }

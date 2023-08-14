@@ -15,5 +15,5 @@ public class QueryBO {
     private List<String> targets;
     private String targetType;
     private List<String> queryTags;
-    private List<TagFilter> tagFilters;
+    private TagFilter tagFilters;
 }
