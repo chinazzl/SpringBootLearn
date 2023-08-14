@@ -1,0 +1,25 @@
+server:
+  port: 9000
+spring:
+  datasource:
+    url: jdbc:mysql://127.0.0.1/test?userUnicode=true&characterEncoding=utf-8&serverTimezone=UTC&useSSL=true
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: password
+
+  jpa:
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: update
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+
+  thymeleaf:
+    cache: false
+  application:
+    name: simpleWeb
+
+web:
+  downLoad:
+    path: ./CURD/src/resources/static/doc/

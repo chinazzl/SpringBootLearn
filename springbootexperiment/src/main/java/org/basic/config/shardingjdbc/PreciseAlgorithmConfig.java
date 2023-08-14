@@ -1,7 +1,6 @@
 package org.basic.config.shardingjdbc;
 
 import com.google.common.collect.Range;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingAlgorithm;
 import org.apache.shardingsphere.api.sharding.standard.PreciseShardingValue;
 
@@ -15,7 +14,6 @@ import java.util.Map;
  * @Date: 2022/8/2 14:46
  * @Description: 设置 =,in 的算法策略
  */
-@Slf4j
 public class PreciseAlgorithmConfig implements PreciseShardingAlgorithm<Integer> {
 
     @Override

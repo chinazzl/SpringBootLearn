@@ -10,4 +10,7 @@
             #{user.password})
         </foreach>
     </insert>
+    <insert id="insertUserByMybatisBatch" parameterType="map">
+        insert into user(userName,password) values (#{user.username},#{user.password})
+    </insert>
 </mapper>

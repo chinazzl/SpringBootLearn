@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
+
+    <title>User</title>
+</head>
+<body class="container">
+<h1>用户列表&nbsp;&nbsp;<a href="javascript:void(0)" class="glyphicon-download dl">下载中心</a></h1><br/><br/>
+<!--<h1>用户列表&nbsp;&nbsp;<a href="/user/download" class="glyphicon-download dl">下载中心</a></h1><br/><br/>-->
+<div >
+    <table class="table table-hover">
+        <thead>
+            <tr th:border="1">
+                <th>#</th>
+                <th>UserName1</th>
+                <th>Password</th>
+                <th>Age</th>
+                <th>Edit</th>
+                <th>Delete</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="user : ${users}">
+                <th scope="row" th:text="${user.id}"></th>
+                <td th:text="${user.name}"></td>
+                <td th:text="${user.password}"></td>
+                <td th:text="${user.age}"></td>
+                <td><a th:href="@{/toEdit(id=${user.id})}">edit</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<script th:src="@{/js/jquery.js}"></script>
+<script type="text/javascript">
+    $(".dl").on("click",function () {
+        var left = (screen.availWidth-750)/2;
+        var top = (screen.availHeight-560)/2;
+        var width = 740;
+        var height = 560;
+
+
+        window.open(getRealPath()+'/downLoadView',"winname","scrollbars=yes,resizable=yes,top="+top+",left="+left+",width="+width+",height="+height)
+    })
+
+    /**
+     * 获取绝对路径
+     */
+    function getRealPath() {
+        //获取当前网址
+        var curWwwPath = window.document.location.href;
+        //获取主机地址后面的目录
+        var pathName = window.document.location.pathname;
+        var pos=curWwwPath.indexOf(pathName);
+        var locahostPath = curWwwPath.substring(0,pos);
+        //获取带‘/’的项目名
+        var projectName = pathName.substring(0,pathName.substr(1).indexOf('/')+1);
+
+        var realPath = locahostPath + projectName;
+        alert(realPath);
+        return realPath;
+
+    }
+</script>
+</body>
+</html>

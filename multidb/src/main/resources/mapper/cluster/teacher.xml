@@ -2,6 +2,6 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="org.multidb.dao.cluster.TeacherDao">
     <select id="findTeacherById" resultType="org.multidb.entity.Teacher" parameterType="java.lang.Integer">
-        SELECT * from tcher where tid = #{id}
+        SELECT * from stu where sid = #{id}
     </select>
 </mapper>

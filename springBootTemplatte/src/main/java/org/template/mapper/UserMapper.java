@@ -1,7 +1,7 @@
 package org.template.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.baomidou.mybatisplus.extension.service.IService;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Component;
 import org.template.pojo.User;
@@ -15,6 +15,7 @@ import java.util.Map;
  * @Description:
  **********************************/
 @Mapper
+@Component
 public interface UserMapper {
 
     void batchUser(List<Map<String, String>> users);
