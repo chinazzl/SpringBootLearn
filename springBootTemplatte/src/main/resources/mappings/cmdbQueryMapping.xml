@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.template.mapper.TcmdbQueryMapper">
+    <select id="getCmdbAfterFilter" resultType="org.template.dto.TCmdbInfo">
+        select TARGET, listagg(tag_key, ',') within group(order by tag_key) as tags
+        from T_CMDB_INFO
+        WHERE 1 =1
+            <foreach collection="tagFilters" item="tagFilter" separator="OR">
+                AND (TAG_KEY =#{tagFilter.getTagKey} AND TAG_VALUE = #{tagFilter.getTagValue})
+            </foreach>
+        group by TARGET
+    </select>
+</mapper>

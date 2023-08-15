@@ -1,11 +1,17 @@
 package org.template.service;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.sql.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.template.dto.QueryBO;
 import org.template.dto.QueryrResultDto;
+import org.template.dto.TCmdbInfo;
 import org.template.dto.TagFilter;
+import org.template.mapper.TcmdbQueryMapper;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**********************************
@@ -16,6 +22,8 @@ import java.util.List;
 @Component
 @Slf4j
 public class BasicQueryImpl implements BasicQuery{
+@Resource
+private TcmdbQueryMapper tcmdbQueryMapper;
 
     @Override
     public QueryrResultDto basicQueryResult(QueryBO queryBO) {
@@ -25,12 +33,14 @@ public class BasicQueryImpl implements BasicQuery{
         // 获取所有的条件信息
         List<TagFilter> filterAll = tagFilter.toAll();
     /**
-     * select main_id, group_concat(tag_key) as tags from tag.tag_relation
-     * where (tag_key = 'tag1' and tag_value = 'value1') or (tag_key = 'tag1' and tag_value = 'value12')
-     * group by main_id
-     * having tags in ( 'tag1,tag1' )  limit 0, 10;
+     * select TARGET, listagg(tag_key, ',') within group(order by tag_key) as tags
+     *   from T_CMDB_INFO
+     *  where (tag_key = 'UNDER_MAGIC' and TAG_VALUE = 'OS;WAS')
+     *     or (tag_key = 'SYSTEM_NAME' and TAG_VALUE = 'xx系统')
+     *  group by TARGET;
      */
-
+        List<TCmdbInfo> cmdbAfterFilter = tcmdbQueryMapper.getCmdbAfterFilter(filterAll);
         return null;
     }
+
 }
