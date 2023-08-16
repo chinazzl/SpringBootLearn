@@ -2,7 +2,11 @@ package org.template.dto;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson2.JSON;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.template.enums.Condition;
 
@@ -18,6 +22,8 @@ import java.util.Objects;
  * @Description:
  **********************************/
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class TagFilter {
     private Condition condition;
     private List<TagFilter> tagFilters;
@@ -57,6 +63,34 @@ public class TagFilter {
         return new TagFilter(Condition.AND, Arrays.asList(tagFilters));
     }
 
+    /**
+     * {
+     *     "condition" : "AND",
+     *     "tagFilters" : [
+     *       {
+     *         "condition" : "OR",
+     *         "tagFilters" : [
+     *           {
+     *             "tagKey" : "UNDER_MAGIC",
+     *             "condition" : "LIKE",
+     *             "tagValue" : "OS"
+     *           },
+     *           {
+     *             "tagKey" : "SYSTEM_NAME",
+     *             "condition" : "EQUALS",
+     *             "tagValue" : "xx系统"
+     *           }
+     *         ]
+     *       },
+     *       {
+     *         "tagKey" : "OS_TYPE",
+     *         "condition" : "EQUALS",
+     *         "tagValue" : "1"
+     *       }
+     *     ]
+     *   }
+     * @return
+     */
     public List<String> tagKeyCombination() {
         List<String> result = new ArrayList<>();
         if (CollectionUtil.isEmpty(this.tagFilters)) {
@@ -108,7 +142,8 @@ public class TagFilter {
                         TagFilter.like("tag1", "value1"),
                         TagFilter.equals("tag1", "value2")
                 ),
-                TagFilter.equals("tag4", "value4"));
+                TagFilter.equals("tag4", "value4"),
+                TagFilter.equals("tag5", "value5"));
         System.out.println(JSON.toJSONString(tagFilter));
         List<String> tags = tagFilter.tagKeyCombination();
         System.out.println(StringUtils.joinWith(",", tags));

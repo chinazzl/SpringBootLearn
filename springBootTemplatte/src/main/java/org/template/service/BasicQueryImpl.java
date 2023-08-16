@@ -13,6 +13,7 @@ import org.template.mapper.TcmdbQueryMapper;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**********************************
  * @author zhang zhao lin
@@ -39,8 +40,11 @@ private TcmdbQueryMapper tcmdbQueryMapper;
      *     or (tag_key = 'SYSTEM_NAME' and TAG_VALUE = 'xx系统')
      *  group by TARGET;
      */
-        List<TCmdbInfo> cmdbAfterFilter = tcmdbQueryMapper.getCmdbAfterFilter(filterAll);
+        List<String> targetAfterFilter = tcmdbQueryMapper.getCmdbAfterFilter(filterAll,tagKeyCombine);
+        log.info("targets => {}",targetAfterFilter);
+        // 再根据获取的target获取要查询的一些数据
         return null;
+
     }
 
 }

@@ -3,13 +3,19 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="org.template.mapper.TcmdbQueryMapper">
-    <select id="getCmdbAfterFilter" resultType="org.template.dto.TCmdbInfo">
-        select TARGET, listagg(tag_key, ',') within group(order by tag_key) as tags
+
+    <select id="getCmdbAfterFilter" resultType="string">
+        WITH T AS (
+        select target, listagg(tag_key, ',') within group(order by tag_key) as tags
         from T_CMDB_INFO
-        WHERE 1 =1
-            <foreach collection="tagFilters" item="tagFilter" separator="OR">
-                AND (TAG_KEY =#{tagFilter.getTagKey} AND TAG_VALUE = #{tagFilter.getTagValue})
-            </foreach>
-        group by TARGET
+        WHERE 1 = 1
+        <foreach collection="tagFilters"  item="tagFilter" open="AND (" separator="OR" close=")">
+             (TAG_KEY =#{tagFilter.tagKey} AND TAG_VALUE = #{tagFilter.tagValue})
+        </foreach>
+        group by target)
+        SELECT target from T where t.tags in
+        <foreach collection="tagKeyCombine" item="tag" open="(" separator="," close=")">
+            #{tag}
+        </foreach>
     </select>
 </mapper>
