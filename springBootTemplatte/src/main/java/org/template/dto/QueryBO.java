@@ -10,7 +10,7 @@ import java.util.List;
  * @Description:
  **********************************/
 @Data
-public class QueryBO {
+public class QueryBO extends PageDTO{
 
     private List<String> targets;
     private String targetType;

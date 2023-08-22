@@ -6,7 +6,6 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import org.apache.ibatis.type.JdbcType;
-import org.springframework.data.annotation.Id;
 
 /**********************************
  * @author zhang zhao lin
@@ -32,7 +31,7 @@ public class TCmdbInfo {
     @TableField(value = "TARGET_TYPE",jdbcType = JdbcType.VARCHAR)
     private String targetType;
     private String targetId;
-    @TableField(value = "TARGET_KEY",jdbcType = JdbcType.VARCHAR)
+    @TableField(value = "TAG_KEY",jdbcType = JdbcType.VARCHAR)
     private String targetKey;
     @TableField(value = "VALUE_TEXT",jdbcType = JdbcType.VARCHAR)
     private String valueText;

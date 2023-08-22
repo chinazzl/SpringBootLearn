@@ -10,7 +10,7 @@ import java.util.List;
  * @Description:
  **********************************/
 @Data
-public class QueryrResultDto {
+public class ResultResponse {
     private int page;
     private int pageSize;
     private int total;
@@ -25,10 +25,10 @@ public class QueryrResultDto {
 
     @Data
     public class Tag {
-        private String tagId;
-        private String tagKey;
-        private String tagValue;
-        private String tagType;
+        private String targetId;
+        private String targetKey;
+        private String valueText;
+        private String valueType;
     }
 }
 

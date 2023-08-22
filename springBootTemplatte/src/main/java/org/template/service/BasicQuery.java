@@ -1,7 +1,7 @@
 package org.template.service;
 
 import org.template.dto.QueryBO;
-import org.template.dto.QueryrResultDto;
+import org.template.dto.ResultResponse;
 
 /**********************************
  * @author zhang zhao lin
@@ -10,6 +10,6 @@ import org.template.dto.QueryrResultDto;
  **********************************/
 public interface BasicQuery {
 
-    QueryrResultDto basicQueryResult(QueryBO queryBO);
+    ResultResponse basicQueryResult(QueryBO queryBO);
 
 }

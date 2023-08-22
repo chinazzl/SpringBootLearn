@@ -25,7 +25,7 @@ public interface UserMapper {
      *
      * @param user
      */
-    void batchUserByMybatis(@Param("user") Map<String, String> user);
+   /* void batchUserByMybatis(@Param("user") Map<String, String> user);
 
     @Insert("insert into user(uid,name,password) values (#{user.id},#{user.userName}, #{user.passWord})")
     void insert(@Param("user") User user);
@@ -34,5 +34,5 @@ public interface UserMapper {
     void update(@Param("user") User user);
 
     @Delete("delete from user where uid = #{id}")
-    void delete(@Param("id") Integer id);
+    void delete(@Param("id") Integer id);*/
 }

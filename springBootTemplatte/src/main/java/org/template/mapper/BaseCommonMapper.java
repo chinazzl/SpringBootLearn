@@ -11,6 +11,6 @@ import org.template.pojo.User;
  * @Description:
  */
 @Repository
-public interface BaseCommonMapper extends BaseMapper<User> {
+public interface BaseCommonMapper {
 
 }
