@@ -9,16 +9,26 @@
         select target, listagg(tag_key, ',') within group(order by tag_key) as tags
         from T_CMDB_INFO
         WHERE 1 = 1
-        <foreach collection="tagFilters" item="tagFilter" open="AND (" separator="OR" close=")">
-            (TAG_KEY =#{tagFilter.tagKey} AND TAG_VALUE = #{tagFilter.tagValue})
-        </foreach>
+        <if test="tagFilters != null and tagFilters.size() > 0">
+            AND
+            <foreach collection="tagFilters" item="tagFilter" separator="OR" >
+                <if test="tagFilter.tagKey != null and tagFilter.tagValue != null">
+                    (TAG_KEY =#{tagFilter.tagKey} AND TAG_VALUE = #{tagFilter.tagValue})
+                </if>
+            </foreach>
+        </if>
         group by target)
         SELECT A.target
         FROM
-        (SELECT ROWNUM RN , target from T where t.tags in
-        <foreach collection="tagKeyCombine" item="tag" open="(" separator="," close=")">
-            #{tag}
-        </foreach>
+        (SELECT ROWNUM RN , target from T where 1=1
+        <if test="tagKeyCombine != null and tagKeyCombine.size() > 0">
+            and t.tags in
+            <foreach collection="tagKeyCombine" item="tag" open="(" separator="," close=")">
+                <if test="tag != null and tag != ''.toString()">
+                    #{tag,jdbcType=VARCHAR}
+                </if>
+            </foreach>
+        </if>
         AND ROWNUM &lt;= #{page.pageSize} ) A
         WHERE A.RN &gt;= #{page.pageNumber}
     </select>
@@ -28,18 +38,21 @@
         FROM (
         <foreach collection="queryTags" item="tag" separator="UNION ALL ">
             <if test="valueType == 'SIMPLE_TEXT'.toString()">
-                SELECT TARGETID, TAG_KEY, TAG_VALUE AS valueText, TARGET, VALUE_TYPE FROM T_CMDB_INFO WHERE TAG_KEY = #{tag}
+                SELECT TARGETID, TAG_KEY, TAG_VALUE AS valueText, TARGET, VALUE_TYPE FROM T_CMDB_INFO WHERE TAG_KEY = #{tag,jdbcType=VARCHAR}
             </if>
             <if test="valueType == 'STD_CODE'.toString()">
                 SELECT TARGETID, TAG_KEY, STD.VALUE_DESC AS valueText, TARGET ,VALUE_TYPE
                 FROM T_CMDB_INFO TCMD INNER JOIN T_STD_CODE STD
                 ON TCMD.TARGETID = STD.TAG_ID AND TCMD.TAG_VALUE = STD.VALUE_CODE
-                WHERE TCMD.TAG_KEY = #{tag}
+                WHERE TCMD.TAG_KEY = #{tag,jdbcType=VARCHAR}
             </if>
         </foreach>
-        ) T WHERE T.TARGET IN
-        <foreach collection="targets" item="target" open="(" close=")" separator=",">
-            #{target}
-        </foreach>
+        ) T WHERE 1 =1
+        <if test="targets != null and targets.size() > 0">
+            and T.TARGET IN
+            <foreach collection="targets" item="target" open="(" close=")" separator=",">
+                #{target}
+            </foreach>
+        </if>
     </select>
 </mapper>
