@@ -51,7 +51,7 @@
         <if test="targets != null and targets.size() > 0">
             and T.TARGET IN
             <foreach collection="targets" item="target" open="(" close=")" separator=",">
-                #{target}
+                #{target,jdbcType=VARCHAR}
             </foreach>
         </if>
     </select>

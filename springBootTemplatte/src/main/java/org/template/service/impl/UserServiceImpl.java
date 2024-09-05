@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 @Service
 public class UserServiceImpl implements IUserService {
 
-    @Resource
+     @Resource
     private UserMapper userMapper;
 
     @Resource
@@ -31,7 +31,7 @@ public class UserServiceImpl implements IUserService {
     @Resource
     private TransactionDefinition transactionDefinition;
 
-    @Override
+  @Override
     public void userHandler() {
 
         for (int i = 0; i < 10; i++) {
@@ -45,7 +45,7 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
-    private void subHandler(User build,Integer id) {
+   private void subHandler(User build,Integer id) {
         TransactionStatus transactionStatus = dataSourceTransactionManager.getTransaction(transactionDefinition);
         try {
             userMapper.insert(build);

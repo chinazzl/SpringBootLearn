@@ -10,6 +10,6 @@ import org.template.pojo.User;
  */
 public interface IUserService {
 
-    //void userHandler();
+    void userHandler();
 
 }

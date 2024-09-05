@@ -41,4 +41,35 @@ public interface QueryJSON {
             "  \"pageSize\" : 10,\n" +
             "  \"page\" : 1\n" +
             "}";
+
+    String tagFilter = "{\n" +
+            "    \"condition\": \"AND\",\n" +
+            "    \"tagFilters\": [\n" +
+            "        {\n" +
+            "            \"condition\": \"OR\",\n" +
+            "            \"tagFilters\": [\n" +
+            "                {\n" +
+            "                    \"condition\": \"EQUALS\",\n" +
+            "                    \"tagKey\": \"tag3\",\n" +
+            "                    \"tagValue\": \"value3\"\n" +
+            "                },\n" +
+            "                {\n" +
+            "                    \"condition\": \"LIKE\",\n" +
+            "                    \"tagKey\": \"tag3\",\n" +
+            "                    \"tagValue\": \"%value1%\"\n" +
+            "                },\n" +
+            "                {\n" +
+            "                    \"condition\": \"EQUALS\",\n" +
+            "                    \"tagKey\": \"tag3\",\n" +
+            "                    \"tagValue\": \"value2\"\n" +
+            "                }\n" +
+            "            ]\n" +
+            "        },\n" +
+            "        {\n" +
+            "            \"condition\": \"EQUALS\",\n" +
+            "            \"tagKey\": \"tag4\",\n" +
+            "            \"tagValue\": \"value4\"\n" +
+            "        }\n" +
+            "    ]\n" +
+            "}";
 }

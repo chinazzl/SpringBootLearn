@@ -18,7 +18,7 @@ import java.util.Objects;
  * @date 2023年09月18日 10:55
  * @Description: 一个通用的
  **********************************/
-@Aspect
+//@Aspect
 @Component
 @Slf4j
 public class AuthorizationAspect {
@@ -29,7 +29,7 @@ public class AuthorizationAspect {
         this.applicationContext = applicationContext;
     }
 
-    @Before("feignClient()")
+    //@Before("feignClient()")
     public void addHeader(JoinPoint joinPoint) {
         Class<?> clazz = joinPoint.getSignature().getDeclaringType();
         Method method;

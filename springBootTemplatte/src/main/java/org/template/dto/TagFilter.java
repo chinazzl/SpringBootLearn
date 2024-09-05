@@ -2,6 +2,7 @@ package org.template.dto;
 
 import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.template.enums.Condition;
+import org.template.json.QueryJSON;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -136,15 +138,16 @@ public class TagFilter {
 
 
     public static void main(String[] agrs) {
-        TagFilter tagFilter = TagFilter.and(
-                TagFilter.or(
-                        TagFilter.equals("tag3", "value3"),
-                        TagFilter.like("tag1", "value1"),
-                        TagFilter.equals("tag1", "value2")
-                ),
-                TagFilter.equals("tag4", "value4"),
-                TagFilter.equals("tag5", "value5"));
-        System.out.println(JSON.toJSONString(tagFilter));
+        //TagFilter tagFilter = TagFilter.and(
+        //        TagFilter.or(
+        //                TagFilter.equals("tag3", "value3"),
+        //                TagFilter.like("tag1", "value1"),
+        //                TagFilter.equals("tag1", "value2")
+        //        ),
+        //        TagFilter.equals("tag4", "value4"),
+        //        TagFilter.equals("tag5", "value5"));
+        //System.out.println(JSON.toJSONString(tagFilter));
+        TagFilter tagFilter = JSONObject.parseObject(QueryJSON.tagFilter, TagFilter.class);
         List<String> tags = tagFilter.tagKeyCombination();
         System.out.println(StringUtils.joinWith(",", tags));
 
