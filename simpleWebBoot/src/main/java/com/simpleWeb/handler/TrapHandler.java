@@ -1,5 +1,6 @@
 package com.simpleWeb.handler;
 
+import com.simpleWeb.entity.TrapSource;
 import com.simpleWeb.entity.TrapSourceConfig;
 import org.snmp4j.smi.VariableBinding;
 
@@ -10,5 +11,5 @@ import org.snmp4j.smi.VariableBinding;
  **/
 public interface TrapHandler {
     String getOid();
-    void handle(VariableBinding binding, TrapSourceConfig.TrapSource source);
+    void handle(VariableBinding binding, TrapSource source);
 }

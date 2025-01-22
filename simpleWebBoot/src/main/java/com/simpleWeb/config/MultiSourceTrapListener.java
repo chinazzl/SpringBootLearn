@@ -1,6 +1,8 @@
 package com.simpleWeb.config;
 
+import com.simpleWeb.entity.TrapSource;
 import com.simpleWeb.entity.TrapSourceConfig;
+import com.simpleWeb.handler.SourceSpecificTrapHandler;
 import com.simpleWeb.handler.TrapHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.Snmp;
@@ -13,6 +15,7 @@ import org.snmp4j.smi.UdpAddress;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PreDestroy;
 import java.io.IOException;
 import java.net.SocketException;
 import java.util.List;
@@ -36,11 +39,11 @@ public class MultiSourceTrapListener {
         initializeListeners(config.getSources());
     }
 
-    private void initializeListeners(List<TrapSourceConfig.TrapSource> sources) {
+    private void initializeListeners(List<TrapSource> sources) {
         sources.forEach(this::createListener);
     }
 
-    private void createListener(TrapSourceConfig.TrapSource source) {
+    private void createListener(TrapSource source) {
         try {
             // 创建 SNMP V3 的 USM
             USM usm = new USM(SecurityProtocols.getInstance(),
@@ -79,8 +82,6 @@ public class MultiSourceTrapListener {
 
         } catch (IOException e) {
             log.error("Failed to create SNMP listener for {}", source.getName(), e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 

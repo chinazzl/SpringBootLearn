@@ -1,9 +1,16 @@
 package com.simpleWeb.handler;
 
+import com.simpleWeb.entity.TrapSource;
+import com.simpleWeb.entity.TrapSourceConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.CommandResponder;
 import org.snmp4j.CommandResponderEvent;
 import org.snmp4j.PDU;
+import org.snmp4j.smi.VariableBinding;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
+import java.util.Vector;
 
 /**
  * @author: zhaolin
@@ -11,11 +18,12 @@ import org.springframework.stereotype.Component;
  * @Description:
  **/
 @Component
+@Slf4j
 public class SourceSpecificTrapHandler implements CommandResponder {
-    private final TrapSourceConfig.TrapSource source;
+    private final TrapSource source;
     private final List<TrapHandler> handlers;
 
-    public SourceSpecificTrapHandler(TrapSourceConfig.TrapSource source, List<TrapHandler> handlers) {
+    public SourceSpecificTrapHandler(TrapSource source, List<TrapHandler> handlers) {
         this.source = source;
         this.handlers = handlers;
     }
@@ -51,7 +59,7 @@ public class SourceSpecificTrapHandler implements CommandResponder {
     }
 
     private void processTrapPdu(PDU pdu) {
-        Vector<? extends VariableBinding> varBinds = pdu.getVariableBindings();
+        Vector<? extends VariableBinding> varBinds = (Vector<? extends VariableBinding>) pdu.getVariableBindings();
 
         for (VariableBinding binding : varBinds) {
             String oid = binding.getOid().toString();

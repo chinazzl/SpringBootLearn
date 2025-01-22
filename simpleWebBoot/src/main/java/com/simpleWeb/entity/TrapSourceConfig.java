@@ -17,14 +17,4 @@ import java.util.List;
 @ConfigurationProperties(prefix = "snmp.trap")
 public class TrapSourceConfig {
     private List<TrapSource> sources;
-
-    @Data
-    public static class TrapSource {
-        private String name;        // 源名称，如 "金融信贷集群"
-        private String ip;          // Trap源IP
-        private int port;           // 端口
-        private String username;    // 用户名
-        private String password;    // 密码
-        private String authPassword; // 加密密码
-    }
 }

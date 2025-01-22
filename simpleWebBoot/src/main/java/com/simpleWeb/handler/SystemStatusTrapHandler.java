@@ -1,5 +1,6 @@
 package com.simpleWeb.handler;
 
+import com.simpleWeb.entity.TrapSource;
 import com.simpleWeb.entity.TrapSourceConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.smi.VariableBinding;
@@ -21,7 +22,7 @@ public class SystemStatusTrapHandler implements TrapHandler {
     }
 
     @Override
-    public void handle(VariableBinding binding, TrapSourceConfig.TrapSource source) {
+    public void handle(VariableBinding binding, TrapSource source) {
         String value = binding.getVariable().toString();
         log.info("Received system status trap from {}: {}",
                 source.getName(), value);
@@ -30,7 +31,7 @@ public class SystemStatusTrapHandler implements TrapHandler {
         processTrapMessage(source, value);
     }
 
-    private void processTrapMessage(TrapSourceConfig.TrapSource source, String value) {
+    private void processTrapMessage(TrapSource source, String value) {
         // 根据不同集群来源处理消息
         switch (source.getName()) {
             case "金融信贷集群":
