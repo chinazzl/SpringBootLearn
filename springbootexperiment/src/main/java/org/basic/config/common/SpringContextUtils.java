@@ -31,6 +31,7 @@ public class SpringContextUtils<T> implements ApplicationContextAware {
     }
 
     public Object getBean(Class<T> className,Object... objects) {
-        return className != null ? applicationContext.getBean(className,objects) : null;
+        return className != null ? applicationContext.getBean(className, objects) : null;
     }
+
 }

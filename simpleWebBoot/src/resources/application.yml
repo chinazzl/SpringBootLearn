@@ -20,6 +20,30 @@ spring:
   application:
     name: simpleWeb
 
+snmp:
+  trap:
+    sources:
+      - name: 金融信贷集群
+        ip: 101.14.23.45
+        port: 20000
+        username: Snmp_Trap_jyfxjc
+        password: jyfxjc_12#$
+        authPassword: Hwsimg$_jyfxjc
+
+      - name: 客户理财集群
+        ip: 113.14.25.56
+        port: 20000
+        username: Snmp_Trap_khjygl
+        password: khjygl_12#$
+        authPassword: Hwsimg$_khjygl
+
+      - name: 监管一表通集群
+        ip: 102.116.15.68
+        port: 20000
+        username: Snmp_Trap_jgybt
+        password: jgybt_12#$
+        authPassword: Hwsimg$_jgybt
+
 web:
   downLoad:
     path: ./CURD/src/resources/static/doc/

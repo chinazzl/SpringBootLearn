@@ -11,7 +11,6 @@
     <modules>
         <module>service-1</module>
         <module>service-2</module>
-        <module>application-1</module>
         <module>simple-alibaba-demo</module>
         <module>service-3</module>
     </modules>
