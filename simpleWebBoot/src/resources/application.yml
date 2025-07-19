@@ -2,20 +2,36 @@ server:
   port: 9000
 spring:
   datasource: # 数据源的相关配置
-    type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
-    driver-class-name: com.mysql.cj.jdbc.Driver # mysql驱动
-    url: jdbc:mysql://localhost:3306/op_db?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
-    username: root
-    password: password
-    hikari:
-      connection-timeout: 30000 # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQ
-      minimum-idle: 5 # 最小连接数
-      maximum-pool-size: 20 # 最大连接数
-      auto-commit: true # 自动提交
-      idle-timeout: 600000 # 连接超时的最大时长（毫秒），超时则被释放（retired），默认:10分钟
-      pool-name: DateSourceHikariCP # 连接池名字
-      max-lifetime: 1800000 # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟
-      connection-test-query: SELECT 1
+    primary:
+      type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
+      driver-class-name: com.mysql.cj.jdbc.Driver # mysql驱动
+      jdbc-url: jdbc:mysql://localhost:3306/op_db?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+      username: root
+      password: password
+      hikari:
+        connection-timeout: 30000 # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQ
+        minimum-idle: 5 # 最小连接数
+        maximum-pool-size: 20 # 最大连接数
+        auto-commit: true # 自动提交
+        idle-timeout: 600000 # 连接超时的最大时长（毫秒），超时则被释放（retired），默认:10分钟
+        pool-name: DateSourceHikariCP # 连接池名字
+        max-lifetime: 1800000 # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟
+        connection-test-query: SELECT 1
+    cmp:
+      type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
+      driver-class-name: com.mysql.cj.jdbc.Driver # mysql驱动
+      jdbc-url: jdbc:mysql://localhost:3306/cmp?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+      username: root
+      password: password
+      hikari:
+        connection-timeout: 30000 # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQ
+        minimum-idle: 5 # 最小连接数
+        maximum-pool-size: 20 # 最大连接数
+        auto-commit: true # 自动提交
+        idle-timeout: 600000 # 连接超时的最大时长（毫秒），超时则被释放（retired），默认:10分钟
+        pool-name: DateSourceHikariCP # 连接池名字
+        max-lifetime: 1800000 # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟
+        connection-test-query: SELECT 1
 
   jpa:
     properties:
@@ -57,3 +73,13 @@ snmp:
 web:
   downLoad:
     path: ./CURD/src/resources/static/doc/
+#mybatis-plus:
+#  configuration:
+#    #开启驼峰命名自动映射
+#    map-underscore-to-camel-case: true
+#    #开启日志打印
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+##    default-enum-type-handler: com.alicloud.config.mybatis.handler.CommonEnumTypeHandler
+#  type-aliases-package: com.simpleWeb.entity.db # 所有POJO类所在包路径
+#  #扫描mapper文件
+#  mapper-locations: classpath:mappings/*.xml

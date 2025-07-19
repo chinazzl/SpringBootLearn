@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simpleWeb.mapper.cmp.CmpResourceMapper">
+
+    <select id="queryVmwareResourceDOList"
+        resultType="com.simpleWeb.entity.db.cmp.CmpResourceDO">
+        select 'vmware' as serviceType, CPU_ARCHITECTURE, CPU_CORE, MEMORY, LOCAL_DISK, SHARE_DISK
+        from VMWARE_RESOURCE
+    </select>
+
+    <select id="queryFusionCloudResourceDOList"
+        resultType="com.simpleWeb.entity.db.cmp.CmpResourceDO">
+        select 'fusionCloud' as serviceType, CPU_ARCHITECTURE, CPU_CORE, MEMORY, LOCAL_DISK, SHARE_DISK
+        from FUSION_CLOUD_RESOURCE
+    </select>
+
+
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simpleWeb.mapper.primary.ResourceMapper">
+
+    <insert id="insert" parameterType="java.util.List">
+        insert into VM_RESOURCE(CPU_ARCHITECTURE,CPU_CORE,MEMORY,LOCAL_DISK,SHARE_STORAGE,SERVICE_TYPE)
+        values
+        <foreach collection="list" item="resourceDO" separator=",">
+            (
+            #{resourceDO.cpuArchitecture},
+            #{resourceDO.cpuCore},
+            #{resourceDO.memory},
+            #{resourceDO.localDisk},
+            #{resourceDO.shareDisk},
+            #{resourceDO,serviceType}
+            )
+        </foreach>
+    </insert>
+
+    <update id="update" parameterType="com.simpleWeb.entity.db.primary.ResourceDO">
+        UPDATE VM_RESOURCE SET CPU_ARCHITECTURE = #{resourceDo.cpuArchitecture},
+                               CPU_CORE = #{resourceDo.cpuCore},
+                               MEMORY = #{resourceDo.memory},
+                               LOCAL_DISK = #{resourceDo.localDisk},
+                               SHARE_STORAGE = #{resourceDo.shareDisk}
+        where SERVICE_TYPE = #{resourceDo.serviceType}
+
+    </update>
+
+    <select id="findByServiceType" parameterType="string" resultType="com.simpleWeb.entity.db.primary.ResourceDO">
+        select CPU_ARCHITECTURE, CPU_CORE, MEMORY, LOCAL_DISK, SHARE_STORAGE
+        from VM_RESOURCE
+        where SERVICE_TYPE = #{serviceType,jdbcType=VARCHAR}
+    </select>
+</mapper>
