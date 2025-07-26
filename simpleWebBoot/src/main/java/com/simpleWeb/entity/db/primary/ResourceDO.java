@@ -17,4 +17,8 @@ public class ResourceDO {
     private int memory;
     private int localDisk;
     private int shareDisk;
+    private String areaName;
+    private int areaId;
+    private String appSystemName;
+    private String appSystemId;
 }

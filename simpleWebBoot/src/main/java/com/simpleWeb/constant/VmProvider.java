@@ -9,4 +9,7 @@ public interface VmProvider {
 
     String VMWARE = "vmare";
     String FUSION_CLOUD = "fusionCloud";
+    String X86= "X86";
+    String ARM = "ARM";
+    String C86 = "C86";
 }

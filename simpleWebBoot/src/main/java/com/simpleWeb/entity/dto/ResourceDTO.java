@@ -3,6 +3,8 @@ package com.simpleWeb.entity.dto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 /**
  * @author: zhaolin
  * @Date: 2025/7/17

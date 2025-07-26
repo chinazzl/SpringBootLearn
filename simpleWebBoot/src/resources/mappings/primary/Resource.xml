@@ -32,4 +32,16 @@
         from VM_RESOURCE
         where SERVICE_TYPE = #{serviceType,jdbcType=VARCHAR}
     </select>
+    <select id="selectResourceDOList"
+            resultType="com.simpleWeb.entity.db.primary.ResourceDO">
+        select CPU_ARCHITECTURE,
+               AREA_NAME,
+               sum(CPU_CORE)      as cpuCore,
+               sum(MEMORY)        as memory,
+               sum(LOCAL_DISK)    as localDisk,
+               sum(SHARE_STORAGE) as cpuCore
+        from VM_RESOURCE
+        group by CPU_ARCHITECTURE, AREA_NAME
+    </select>
+
 </mapper>
