@@ -5,5 +5,12 @@
     resultType="com.simpleWeb.entity.db.primary.ResourcePriceDO">
         select * from resource_price
     </select>
+
+    <select id="resourcePriceDOListByAreaId"
+            resultType="com.simpleWeb.entity.db.primary.ResourcePriceDO">
+        select * from resource_price
+        where area_id = #{areaId}
+        order by collect_date desc;
+    </select>
 </mapper>
 

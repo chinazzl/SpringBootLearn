@@ -4,7 +4,6 @@ import com.simpleWeb.entity.db.primary.ResourceDO;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -22,4 +21,7 @@ public interface ResourceMapper {
     ResourceDO findByServiceType(@Param("serviceType") String serviceType);
 
     List<ResourceDO> selectResourceDOList();
+
+    List<ResourceDO> queryResourceGroupTime();
+
 }

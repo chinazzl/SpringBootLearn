@@ -2,6 +2,7 @@ package com.simpleWeb.entity.db.primary;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -13,13 +14,13 @@ import java.time.LocalDateTime;
 @Data
 public class ResourcePriceDO {
 
-    private int cpuX86;
-    private int cpuC86;
-    private int cpuARM;
-    private int memoryPrice;
-    private int nasPrice;
-    private int localDiskPrice;
-    private int areaId;
+    private BigDecimal cpuX86;
+    private BigDecimal cpuC86;
+    private BigDecimal cpuARM;
+    private BigDecimal memoryPrice;
+    private BigDecimal nasPrice;
+    private BigDecimal localDiskPrice;
+    private BigDecimal areaId;
     private String areaName;
     private LocalDate collectDate;
     private LocalDateTime createTime;

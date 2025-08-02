@@ -2,6 +2,7 @@ package com.simpleWeb.entity.db.cmp;
 
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -21,4 +22,5 @@ public class CmpResourceDO {
     private int shareDisk;
     private Date startTime;
     private Date endTime;
+    private LocalDate createDate;
 }

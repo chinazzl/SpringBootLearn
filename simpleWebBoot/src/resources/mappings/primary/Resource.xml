@@ -36,12 +36,23 @@
             resultType="com.simpleWeb.entity.db.primary.ResourceDO">
         select CPU_ARCHITECTURE,
                AREA_NAME,
+               AREA_ID,
                sum(CPU_CORE)      as cpuCore,
                sum(MEMORY)        as memory,
                sum(LOCAL_DISK)    as localDisk,
                sum(SHARE_STORAGE) as cpuCore
         from VM_RESOURCE
-        group by CPU_ARCHITECTURE, AREA_NAME
+        group by CPU_ARCHITECTURE, AREA_NAME,AREA_ID
     </select>
 
+    <select id="queryResourceGroupTime"  resultType="com.simpleWeb.entity.db.primary.ResourceDO">
+        select CPU_ARCHITECTURE,
+               CREATE_DATE,
+               sum(CPU_CORE)      as cpuCore,
+               sum(MEMORY)        as memory,
+               sum(LOCAL_DISK)    as localDisk,
+               sum(SHARE_STORAGE) as cpuCore
+        from VM_RESOURCE
+        group by CPU_ARCHITECTURE,CREATE_DATE
+    </select>
 </mapper>

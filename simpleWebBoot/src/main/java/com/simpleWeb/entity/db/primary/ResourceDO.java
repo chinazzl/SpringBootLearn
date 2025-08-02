@@ -2,6 +2,8 @@ package com.simpleWeb.entity.db.primary;
 
 import lombok.Data;
 
+import java.time.LocalDate;
+
 /**
  * @author: zhaolin
  * @Date: 2025/7/17
@@ -18,7 +20,8 @@ public class ResourceDO {
     private int localDisk;
     private int shareDisk;
     private String areaName;
-    private int areaId;
+    private Long areaId;
     private String appSystemName;
     private String appSystemId;
+    private LocalDate createDate;
 }

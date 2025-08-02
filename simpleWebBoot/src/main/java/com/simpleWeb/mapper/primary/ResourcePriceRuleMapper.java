@@ -16,4 +16,5 @@ import java.util.List;
 public interface ResourcePriceRuleMapper {
 
     List<ResourcePriceDO> resourcePriceDOList(@Param("collectDate")LocalDate collectDate);
+    List<ResourcePriceDO> resourcePriceDOListByAreaId(@Param("areaId")Long areaId);
 }
