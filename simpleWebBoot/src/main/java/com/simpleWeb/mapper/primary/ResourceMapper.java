@@ -18,7 +18,9 @@ public interface ResourceMapper {
 
     int update(ResourceDO resourceDO);
 
-    ResourceDO findByServiceType(@Param("serviceType") String serviceType);
+    int batchUpdate(List<ResourceDO> resourceDOS);
+
+    int findByServiceType(@Param("serviceType") String serviceType);
 
     List<ResourceDO> selectResourceDOList();
 

@@ -89,12 +89,13 @@ public class VmResourceService {
         List<ResourceDO> insertResourceDOList = new ArrayList<>();
         List<ResourceDO> updateResourceDOList = new ArrayList<>();
         for (CmpResourceDO cmpResourceDO : cmpResourceDOS) {
-            ResourceDO byServiceType = resourceMapper.findByServiceType(cmpResourceDO.getServiceType());
-            if (byServiceType == null) {
+            int byServiceTypeCnt = resourceMapper.findByServiceType(cmpResourceDO.getServiceType());
+            if (byServiceTypeCnt <= 0) {
                 ResourceDO resourceDO = BeanUtil.copyProperties(cmpResourceDO, ResourceDO.class);
                 insertResourceDOList.add(resourceDO);
             } else {
-                updateResourceDOList.add(byServiceType);
+                ResourceDO resourceDO = BeanUtil.copyProperties(cmpResourceDO, ResourceDO.class);
+                updateResourceDOList.add(resourceDO);
             }
         }
         if (CollectionUtil.isNotEmpty(insertResourceDOList)) {
@@ -103,10 +104,12 @@ public class VmResourceService {
             return insertResourceDOList;
         }
         if (CollectionUtil.isNotEmpty(updateResourceDOList)) {
-            for (ResourceDO resourceDO : updateResourceDOList) {
-                int update = resourceMapper.update(resourceDO);
-                log.info("更新了{}条数据，云厂商为{}",update,resourceDO.getServiceType());
-            }
+            int i = resourceMapper.batchUpdate(updateResourceDOList);
+            log.info("{}",i);
+//            for (ResourceDO resourceDO : updateResourceDOList) {
+//                int update = resourceMapper.update(resourceDO);
+//                log.info("更新了{}条数据，云厂商为{}",update,resourceDO.getServiceType());
+//            }
             return updateResourceDOList;
         }
         return Lists.newArrayList();

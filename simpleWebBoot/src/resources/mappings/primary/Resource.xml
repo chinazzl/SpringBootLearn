@@ -18,17 +18,28 @@
     </insert>
 
     <update id="update" parameterType="com.simpleWeb.entity.db.primary.ResourceDO">
-        UPDATE VM_RESOURCE SET CPU_ARCHITECTURE = #{resourceDo.cpuArchitecture},
-                               CPU_CORE = #{resourceDo.cpuCore},
-                               MEMORY = #{resourceDo.memory},
-                               LOCAL_DISK = #{resourceDo.localDisk},
-                               SHARE_STORAGE = #{resourceDo.shareDisk}
-        where SERVICE_TYPE = #{resourceDo.serviceType}
+        UPDATE VM_RESOURCE SET CPU_ARCHITECTURE = #{cpuArchitecture},
+                               CPU_CORE = #{cpuCore},
+                               MEMORY = #{memory},
+                               LOCAL_DISK = #{localDisk},
+                               SHARE_STORAGE = #{shareDisk}
+        where SERVICE_TYPE = #{serviceType}
 
     </update>
 
-    <select id="findByServiceType" parameterType="string" resultType="com.simpleWeb.entity.db.primary.ResourceDO">
-        select CPU_ARCHITECTURE, CPU_CORE, MEMORY, LOCAL_DISK, SHARE_STORAGE
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list"  item="resourceDo" separator=";">
+            UPDATE VM_RESOURCE SET CPU_ARCHITECTURE = #{resourceDo.cpuArchitecture},
+            CPU_CORE = #{resourceDo.cpuCore},
+            MEMORY = #{resourceDo.memory},
+            LOCAL_DISK = #{resourceDo.localDisk},
+            SHARE_STORAGE = #{resourceDo.shareDisk}
+            where SERVICE_TYPE = #{resourceDo.serviceType}
+        </foreach>
+    </update>
+
+    <select id="findByServiceType" parameterType="string" resultType="int">
+        select count(1)
         from VM_RESOURCE
         where SERVICE_TYPE = #{serviceType,jdbcType=VARCHAR}
     </select>

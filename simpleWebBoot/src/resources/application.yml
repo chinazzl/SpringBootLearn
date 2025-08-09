@@ -5,7 +5,7 @@ spring:
     primary:
       type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
       driver-class-name: com.mysql.cj.jdbc.Driver # mysql驱动
-      jdbc-url: jdbc:mysql://localhost:3306/op_db?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+      jdbc-url: jdbc:mysql://localhost:3306/op_db?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false&allowMultiQueries=true
       username: root
       password: password
       hikari:
