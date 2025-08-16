@@ -11,5 +11,7 @@ import java.util.Map;
 public interface DynamicMapper {
 
 
-    List<Map<String,Object>> selectDynamic(Map<String,Object> map);
+//    List<Map<String,Object>> selectDynamic(Map<String,Object> map);
+
+    List<Map<String,Object>> selectWithParams(Map<String,Object> map);
 }

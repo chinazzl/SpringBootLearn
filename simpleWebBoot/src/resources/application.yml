@@ -87,6 +87,7 @@ snmp:
 web:
   downLoad:
     path: ./CURD/src/resources/static/doc/
+
 #mybatis-plus:
 #  configuration:
 #    #开启驼峰命名自动映射
@@ -96,4 +97,7 @@ web:
 ##    default-enum-type-handler: com.alicloud.config.mybatis.handler.CommonEnumTypeHandler
 #  type-aliases-package: com.simpleWeb.entity.db # 所有POJO类所在包路径
 #  #扫描mapper文件
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 #  mapper-locations: classpath:mappings/*.xml

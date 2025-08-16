@@ -3,14 +3,14 @@
 <mapper namespace="com.simpleWeb.mapper.DynamicMapper">
 
     <!-- 动态SQL查询 -->
-    <select id="selectDynamic" parameterType="map" resultType="map">
-        ${sql}
-    </select>
+<!--    <select id="selectDynamic" parameterType="map" resultType="map">-->
+<!--        ${sql}-->
+<!--    </select>-->
 
     <!-- 参数化查询（更安全） -->
     <select id="selectWithParams" parameterType="map" resultType="map">
         <bind name="tableName" value="tableName"/>
-        SELECT * FROM ${tableName}
+        SELECT system_id FROM ${tableName}
         <where>
             <if test="whereParams != null">
                 <foreach collection="whereParams" index="key" item="value" separator=" AND ">

@@ -118,6 +118,8 @@ public class UniversalDataCollectionService {
     public void streamCollectTableDataWithPage(String dataSourceName,String tableName,Consumer<List<Map<String, Object>>> consumer) {
 
         try {
+            Map<String,Object> whereMap = new HashMap<>();
+            whereMap.put("system_id","0001");
             magicDataSourceManager.withSqlSession(dataSourceName,sqlSession -> {
                 int pageNum = 1;
                 int pageSize = 1;
@@ -129,6 +131,7 @@ public class UniversalDataCollectionService {
                             .dataSourceName(dataSourceName)
                             .tableName(tableName)
                             .needCount(false)
+                            .whereParams(whereMap)
                             .build();
                     data = executeTablePageQuery(sqlSession, tableName, pageQueryRequest);
                     if (CollectionUtil.isNotEmpty(data)) {
@@ -140,7 +143,7 @@ public class UniversalDataCollectionService {
                         }
                     }
                     pageNum++;
-                }while (data.size() == pageSize);
+                } while (data.size() == pageSize);
                 return null;
             });
 
@@ -155,12 +158,14 @@ public class UniversalDataCollectionService {
         StringBuilder sql = new StringBuilder("select * from " + tableName);
         //添加where条件
         Map<String, Object> params = new HashMap<>();
+        Map<String, Object> whereMap = new HashMap<>();
         if (request.getWhereParams() != null && !request.getWhereParams().isEmpty()) {
             sql.append(" where ");
             request.getWhereParams().forEach((key, value) -> {
                 sql.append(key).append(" =#{").append(value).append("} and ");
-                params.put(key, value);
+                whereMap.put(key, value);
             });
+            params.put("whereParams", whereMap);
             // 移除最后的 and
             sql.setLength(sql.length() - 5);
         }
@@ -175,9 +180,13 @@ public class UniversalDataCollectionService {
         sql.append(" limit ").append(request.getPageSize())
                 .append(" offset ").append(request.getOffset());
         params.put("sql", sql.toString());
+        params.put("tableName", tableName);
+        params.put("pageSize", request.getPageSize());
+        params.put("offset", request.getOffset());
         log.info("数据源：{},表名：{},sql=> {}",request.getDataSourceName(),tableName,sql.toString());
-        log.info("参数：{}",request.getWhereParams());
-        return sqlSession.selectList("selectDynamic", params);
+        log.info("参数：{},当前页：{}，每页显示{}条",request.getWhereParams(), request.getOffset(), request.getPageSize());
+//        return sqlSession.selectList("selectDynamic", params);
+        return sqlSession.selectList("selectWithParams", params);
     }
 
     private Long executeTableCountQuery(SqlSession sqlSession, String tableName, PageQueryRequest request) {
