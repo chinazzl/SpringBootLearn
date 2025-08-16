@@ -50,7 +50,7 @@ public class SimpleJob implements Job {
         Trigger trigger = TriggerBuilder.newTrigger()
                 .withIdentity("Simple_Trigger")
                 .forJob(jobDetail)
-                .withSchedule(CronScheduleBuilder.cronSchedule("0/10 * * * * ?"))
+                .withSchedule(CronScheduleBuilder.cronSchedule("0/10 * 1 * * ?"))
                 .build();
 
         try {

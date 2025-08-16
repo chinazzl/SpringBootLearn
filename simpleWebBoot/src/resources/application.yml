@@ -33,6 +33,20 @@ spring:
         max-lifetime: 1800000 # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟
         connection-test-query: SELECT 1
 
+magic:
+  datasources:
+    configs:
+      - name: dws
+        url: jdbc:mysql://localhost:3306/dws?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+        username: root
+        password: password
+        driver-class-name: com.mysql.cj.jdbc.Driver
+      - name: cmp
+        url: jdbc:mysql://localhost:3306/cmp?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+        username: root
+        password: password
+        driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     properties:
       hibernate:
