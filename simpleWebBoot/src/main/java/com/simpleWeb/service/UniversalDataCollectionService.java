@@ -1,12 +1,13 @@
 package com.simpleWeb.service;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.lang.Pair;
 import com.google.common.collect.Lists;
 import com.simpleWeb.config.MagicDataSourceManager;
 import com.simpleWeb.entity.request.PageQueryRequest;
 import com.simpleWeb.entity.vo.PageResult;
-import groovy.util.logging.Slf4j;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.SqlSession;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -16,18 +17,17 @@ import javax.annotation.Resource;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author: zhaolin
  * @Date: 2025/8/16
  * @Description:
  **/
-@lombok.extern.slf4j.Slf4j
 @Component
 @Slf4j
-public class UniversalDataCollectionService {
+public class UniversalDataCollectionService <T>{
 
     @Resource
     private MagicDataSourceManager magicDataSourceManager;
@@ -36,13 +36,13 @@ public class UniversalDataCollectionService {
     ThreadPoolTaskExecutor threadExecutor;
 
 
-    public PageResult<List<Map<String,Object>>> collectDatas(PageQueryRequest request) {
+    public PageResult<List<T>> collectDatas(PageQueryRequest request,Supplier<T> instanceSupplier) {
         Set<String> dataSourceNames = magicDataSourceManager.getDataSourceNames();
-        List<CompletableFuture<List<Map<String, Object>>>> mainInfo = dataSourceNames.stream()
+        List<CompletableFuture<List<T>>> mainInfo = dataSourceNames.stream()
                 .map(dsName -> CompletableFuture
                         .supplyAsync(() -> {
-                            List<Map<String, Object>> result = new ArrayList<>();
-                            streamCollectTableDataWithPage(dsName, "main_info", result::addAll);
+                            List<T> result = new ArrayList<>();
+                            streamCollectTableDataWithPage(dsName, "main_info", result::addAll,instanceSupplier);
                             return result;
                         })
                         .exceptionally(ex -> {
@@ -53,7 +53,7 @@ public class UniversalDataCollectionService {
 
 
         //等待所有任务完成
-        List<Map<String, Object>> collect = mainInfo.stream()
+        List<T> collect = mainInfo.stream()
                 .map(CompletableFuture::join)
                 .flatMap(Collection::stream)
                 .collect(Collectors.toList());
@@ -61,14 +61,14 @@ public class UniversalDataCollectionService {
 
     }
 
-    public Map<String, PageResult<List<Map<String, Object>>>> collectAllTableDataWithPage(PageQueryRequest request) {
+    public Map<String, PageResult<List<T>>> collectAllTableDataWithPage(PageQueryRequest request, Supplier<T> instanceSupplier) {
         Set<String> dataSourceNames = magicDataSourceManager.getDataSourceNames();
-        List<CompletableFuture<Pair<String, PageResult<List<Map<String, Object>>>>>> collect = dataSourceNames.stream()
+        List<CompletableFuture<Pair<String, PageResult<List<T>>>>> collect = dataSourceNames.stream()
                 .map(dsName -> CompletableFuture
                         .supplyAsync(() -> {
                             PageQueryRequest dsRequest = cloneRequest(request);
                             dsRequest.setDataSourceName(dsName);
-                            PageResult<List<Map<String, Object>>> listPageResult = collectTableDataWithPage(dsName, dsRequest);
+                            PageResult<List<T>> listPageResult = collectTableDataWithPage(dsName, dsRequest,instanceSupplier);
                             return Pair.of(dsName, listPageResult);
                         })
                         .exceptionally(ex -> {
@@ -77,7 +77,7 @@ public class UniversalDataCollectionService {
                         }))
                 .collect(Collectors.toList());
         //等待所有任务完成
-        Map<String, PageResult<List<Map<String, Object>>>> resultMap = collect.stream()
+        Map<String, PageResult<List<T>>> resultMap = collect.stream()
                 .map(CompletableFuture::join)
                 .collect(Collectors.toMap(Pair::getKey, Pair::getValue));
 
@@ -87,21 +87,21 @@ public class UniversalDataCollectionService {
     /**
      * 从指定数据源中分页采集数据
      */
-    private PageResult<List<Map<String, Object>>> collectTableDataWithPage(String dataSourceName,PageQueryRequest pageQueryRequest) {
+    private PageResult<List<T>> collectTableDataWithPage(String dataSourceName,PageQueryRequest pageQueryRequest,Supplier<T>  instanceSupplier) {
         try {
             return magicDataSourceManager.withSqlSession(dataSourceName,sqlSession -> {
                 Long total = 0L;
                 int pageNum = 0;
-                List<Map<String,Object>> data;
+                List<T> data;
                 String tableName = pageQueryRequest.getTableName();
                     if (StringUtils.isEmpty(tableName)) {
                         throw new RuntimeException("表名不允许为空");
                     }
-                    data = executeTablePageQuery(sqlSession, tableName, pageQueryRequest);
+                    data = executeTablePageQuery(sqlSession, tableName, pageQueryRequest,instanceSupplier);
                     if (pageQueryRequest.getNeedCount()) {
                         total = executeTableCountQuery(sqlSession, tableName, pageQueryRequest);
                     }
-                PageResult<List<Map<String, Object>>> result = PageResult.of(pageQueryRequest, total, data);
+                PageResult<List<T>> result = PageResult.of(pageQueryRequest, total, data);
                 return result;
             });
         }catch (Exception e){
@@ -115,7 +115,7 @@ public class UniversalDataCollectionService {
      * @param dataSourceName
      * @param pageQueryRequest
      */
-    public void streamCollectTableDataWithPage(String dataSourceName,String tableName,Consumer<List<Map<String, Object>>> consumer) {
+    public void streamCollectTableDataWithPage(String dataSourceName,String tableName,Consumer<List<T>> consumer,Supplier<T> instanceSupplier) {
 
         try {
             Map<String,Object> whereMap = new HashMap<>();
@@ -123,7 +123,7 @@ public class UniversalDataCollectionService {
             magicDataSourceManager.withSqlSession(dataSourceName,sqlSession -> {
                 int pageNum = 1;
                 int pageSize = 1;
-                List<Map<String, Object>> data;
+                List<T> data;
                 do {
                     PageQueryRequest pageQueryRequest = PageQueryRequest.builder()
                             .pageNum(pageNum)
@@ -132,8 +132,10 @@ public class UniversalDataCollectionService {
                             .tableName(tableName)
                             .needCount(false)
                             .whereParams(whereMap)
+                            .orderBy("id")
+                            .sortDirection("asc")
                             .build();
-                    data = executeTablePageQuery(sqlSession, tableName, pageQueryRequest);
+                    data = executeTablePageQuery(sqlSession, tableName, pageQueryRequest,instanceSupplier);
                     if (CollectionUtil.isNotEmpty(data)) {
                         try {
                             consumer.accept(data);
@@ -154,7 +156,7 @@ public class UniversalDataCollectionService {
     }
 
 
-    private List<Map<String, Object>> executeTablePageQuery(SqlSession sqlSession, String tableName, PageQueryRequest request) {
+    private List<T> executeTablePageQuery(SqlSession sqlSession, String tableName, PageQueryRequest request,Supplier<T> instanceSupplier) {
         StringBuilder sql = new StringBuilder("select * from " + tableName);
         //添加where条件
         Map<String, Object> params = new HashMap<>();
@@ -186,7 +188,11 @@ public class UniversalDataCollectionService {
         log.info("数据源：{},表名：{},sql=> {}",request.getDataSourceName(),tableName,sql.toString());
         log.info("参数：{},当前页：{}，每页显示{}条",request.getWhereParams(), request.getOffset(), request.getPageSize());
 //        return sqlSession.selectList("selectDynamic", params);
-        return sqlSession.selectList("selectWithParams", params);
+        List<Map<String,Object>> selectWithParams = sqlSession.selectList("selectWithParams", params);
+        List<T> collect = selectWithParams.stream()
+                .map(m -> BeanUtil.fillBeanWithMap(m, instanceSupplier.get(), true))
+                .collect(Collectors.toList());
+        return collect;
     }
 
     private Long executeTableCountQuery(SqlSession sqlSession, String tableName, PageQueryRequest request) {

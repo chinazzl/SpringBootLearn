@@ -8,9 +8,9 @@
 <!--    </select>-->
 
     <!-- 参数化查询（更安全） -->
-    <select id="selectWithParams" parameterType="map" resultType="map">
+    <select id="selectWithParams" parameterType="map" resultType="map" >
         <bind name="tableName" value="tableName"/>
-        SELECT system_id FROM ${tableName}
+        SELECT * FROM ${tableName}
         <where>
             <if test="whereParams != null">
                 <foreach collection="whereParams" index="key" item="value" separator=" AND ">

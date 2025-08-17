@@ -102,6 +102,7 @@ public class MagicDataSourceManager {
         } catch (Exception e) {
             log.warn("加载 Mapper XML 文件失败，将使用注解方式: {}", e.getMessage());
         }
+        sqlSessionFactoryBean.setTypeAliasesPackage("com.simpleWeb.entity.db.third");
 
         return sqlSessionFactoryBean.getObject();
     }

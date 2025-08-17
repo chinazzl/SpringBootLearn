@@ -8,10 +8,10 @@ import java.util.Map;
  * @Date: 2025/8/16
  * @Description:
  **/
-public interface DynamicMapper {
+public interface DynamicMapper <T>{
 
 
 //    List<Map<String,Object>> selectDynamic(Map<String,Object> map);
 
-    List<Map<String,Object>> selectWithParams(Map<String,Object> map);
+//    List<T> selectWithParams(Map<String,Object> map);
 }

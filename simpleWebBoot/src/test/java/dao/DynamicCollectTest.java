@@ -1,6 +1,7 @@
 package dao;
 
 import com.simpleWeb.Runner;
+import com.simpleWeb.entity.db.third.MainInfoDO;
 import com.simpleWeb.entity.request.PageQueryRequest;
 import com.simpleWeb.entity.vo.PageResult;
 import com.simpleWeb.service.UniversalDataCollectionService;
@@ -27,12 +28,12 @@ import java.util.Map;
 public class DynamicCollectTest {
 
     @Resource
-    private UniversalDataCollectionService universalDataCollectionService;
+    private UniversalDataCollectionService<MainInfoDO> universalDataCollectionService;
 
     @Test
     public void collectAllTableDataWithPage() throws InterruptedException {
         PageQueryRequest request = new PageQueryRequest();
-        PageResult<List<Map<String, Object>>> listPageResult = universalDataCollectionService.collectDatas(request);
+        PageResult<List<MainInfoDO>> listPageResult = universalDataCollectionService.collectDatas(request,MainInfoDO::new);
         log.info("listPageResult={}", listPageResult);
         Thread.currentThread().join();
 
