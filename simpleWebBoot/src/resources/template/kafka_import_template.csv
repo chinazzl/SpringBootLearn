@@ -1,0 +1,6 @@
+魔方名称,主题名称,用户权限,用户名称,设置密码
+测试魔方1,test-topic-001,read,zhangsan,password123
+测试魔方1,test-topic-002,write,lisi,password456
+测试魔方2,test-topic-003,admin,wangwu,password789
+生产魔方,prod-topic-001,read,zhaoliu,
+生产魔方,prod-topic-002,write,tianqi,pwd999

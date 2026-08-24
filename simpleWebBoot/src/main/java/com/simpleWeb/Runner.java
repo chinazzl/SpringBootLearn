@@ -10,7 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @Date:Create：in 2020/6/16 17:25
  * @Modified By：
  */
-@SpringBootApplication
+@SpringBootApplicationH
 public class Runner {
     public static void main(String[] args) {
         SpringApplication.run(Runner.class,args);

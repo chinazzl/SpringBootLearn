@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simpleWeb.mapper.kafka.KafkaTopicPermissionMapper">
+    
+    <resultMap id="BaseResultMap" type="com.simpleWeb.entity.db.kafka.KafkaTopicPermissionDO">
+        <id column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="MAGIC_ID" property="magicId" jdbcType="BIGINT"/>
+        <result column="TOPIC_ID" property="topicId" jdbcType="BIGINT"/>
+        <result column="USER_ID" property="userId" jdbcType="BIGINT"/>
+        <result column="PERMISSION_TYPE" property="permissionType" jdbcType="VARCHAR"/>
+        <result column="CREATETIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATETIME" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="VERSION" property="version" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <select id="selectByMagicTopicUser" resultMap="BaseResultMap">
+        SELECT ID, MAGIC_ID, TOPIC_ID, USER_ID, PERMISSION_TYPE, CREATETIME, UPDATETIME, VERSION
+        FROM KAFKA_TOPIC_PERMISSION
+        WHERE MAGIC_ID = #{magicId}
+          AND TOPIC_ID = #{topicId}
+          AND USER_ID = #{userId}
+        LIMIT 1
+    </select>
+    
+</mapper>

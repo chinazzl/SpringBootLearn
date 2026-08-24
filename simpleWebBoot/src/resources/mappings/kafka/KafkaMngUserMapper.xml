@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simpleWeb.mapper.kafka.KafkaMngUserMapper">
+    
+    <resultMap id="BaseResultMap" type="com.simpleWeb.entity.db.kafka.KafkaMngUserDO">
+        <id column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+        <result column="USER_PWD" property="userPwd" jdbcType="VARCHAR"/>
+        <result column="CREATETIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATETIME" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="VERSION" property="version" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <select id="selectByUserName" resultMap="BaseResultMap">
+        SELECT ID, USER_NAME, USER_PWD, CREATETIME, UPDATETIME, VERSION
+        FROM KAFKA_MNG_USER
+        WHERE USER_NAME = #{userName}
+        LIMIT 1
+    </select>
+    
+</mapper>

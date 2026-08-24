@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.simpleWeb.mapper.kafka.KafkaTopicMapper">
+    
+    <resultMap id="BaseResultMap" type="com.simpleWeb.entity.db.kafka.KafkaTopicDO">
+        <id column="ID" property="id" jdbcType="BIGINT"/>
+        <result column="TOPIC_NAME" property="topicName" jdbcType="VARCHAR"/>
+        <result column="CREATETIME" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="UPDATETIME" property="updateTime" jdbcType="TIMESTAMP"/>
+        <result column="VERSION" property="version" jdbcType="INTEGER"/>
+    </resultMap>
+    
+    <select id="selectByTopicName" resultMap="BaseResultMap">
+        SELECT ID, TOPIC_NAME, CREATETIME, UPDATETIME, VERSION
+        FROM KAFKA_TOPIC
+        WHERE TOPIC_NAME = #{topicName}
+        LIMIT 1
+    </select>
+    
+</mapper>
