@@ -1,0 +1,30 @@
+name: Block Specified File Extensions
+
+on:
+  push:
+    branches: [ "main", "master", "develop" ] # 换成你想保护的分支
+  pull_request:
+    branches: [ "main", "master", "develop" ]
+
+jobs:
+  check-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 获取完整提交历史以便对比
+
+      - name: Check for blocked extensions
+        run: |
+          # 检查本次推送中新增加或修改的文件
+          # 这里的 (exe|zip) 代表你要阻止的后缀，可以自行修改或添加，用竖线 | 隔开
+          BLOCKED_FILES=$(git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -E '\.(exe|zip|bak)$' || true)
+          
+          if [ ! -z "$BLOCKED_FILES" ]; then
+            echo "❌ 错误：检测到禁止上传的文件格式！"
+            echo "以下文件已被拦截："
+            echo "$BLOCKED_FILES"
+            exit 1
+          fi
+          echo "✅ 未检测到违规文件格式，检查通过。"
