@@ -1,0 +1,68 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>com.upsb</groupId>
+  <artifactId>SpringBoot-Upgrade</artifactId>
+  <version>1.0-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>SpringBoot-Upgrade</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <!-- Spring Boot 4.x 要求 Java 17+，这里显式声明，避免 maven-compiler-plugin 回落默认值 -->
+    <maven.compiler.release>17</maven.compiler.release>
+    <!--
+      Spring Boot 4 默认使用 Jackson 3（groupId = tools.jackson），由 spring-boot-dependencies
+      统一管理，无需再手动 import BOM。
+      如需锁定 Jackson 3 版本，用 Boot 4 的属性名 jackson-bom.version（注意：仅当继承
+      spring-boot-starter-parent 时该属性才生效；BOM import 方式下请手动 import tools.jackson:jackson-bom）。
+      如需临时继续使用 Jackson 2，见 spring-boot-jackson2 过渡模块（deprecated）。
+    -->
+  </properties>
+
+  <dependencies>
+    <!-- Spring Boot 4 起 spring-boot-starter-web 已 deprecated，推荐 spring-boot-starter-webmvc -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-webmvc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <!-- Source: https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-dependencies -->
+      <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>4.1.1</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <plugins>
+      <!-- 默认的 maven-compiler-plugin:3.1 不支持 maven.compiler.release，需显式升级 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.13.0</version>
+      </plugin>
+      <!-- 内置的 surefire 2.12.4 不支持 JUnit 5，需显式升级 -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>3.5.2</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>
