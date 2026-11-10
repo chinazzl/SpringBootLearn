@@ -2,3 +2,11 @@ server:
   port: 9000
   servlet:
     context-path: /up
+
+# 开机自动压测：启动完成后自动压到指定数值
+# 如需临时开机不压：java -jar xxx.jar --load.enabled=false
+load:
+  enabled: true
+  cpu-percent: 25          # CPU 利用率目标，0~100，0 表示不压
+  cores: 0                # CPU 线程数，0 表示自动按本机核数
+  memory-megabytes: 16384 # 内存占用目标，单位 MB（16384 = 16G），0 表示不占
