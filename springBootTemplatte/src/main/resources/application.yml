@@ -2,36 +2,50 @@ server:
   port: 9000
 
 spring:
-  datasource: # 数据源的相关配置
+  datasource: # 数据源的相关配置（单数据源，HikariCP），由 SecureDataSourceConfig 显式建池
     type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
-#    driver-class-name: com.mysql.jdbc.Driver # mysql驱动
-    driver-class-name: oracle.jdbc.driver.OracleDriver # mysql驱动
-#    url: jdbc:mysql://49.4.114.32:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
-#    url: jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&useSSL=false
+    driver-class-name: oracle.jdbc.driver.OracleDriver # oracle驱动
     url: jdbc:oracle:thin:@localhost:1521:xe
-    username: root
-#    password: zzl19920901
-    password: password
+    # 用户名/口令只允许以下两种形态，username/password 都要加密：
+    #   SM4(Base64) -> 启动时经国密 SM4 解密（生产唯一允许形态）
+    #   明文         -> 仅 sm4.enabled=false 的本地开发允许，生产直接拒绝启动
+    username: SM4(请使用Sm4CryptoTool加密后的用户名密文)
+    password: SM4(请使用Sm4CryptoTool加密后的口令密文)
     hikari:
-      connection-timeout: 30000 # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQ
+      connection-timeout: 30000 # 等待连接池分配连接的最大时长（毫秒）
       minimum-idle: 5 # 最小连接数
       maximum-pool-size: 20 # 最大连接数
       auto-commit: true # 自动提交
-      idle-timeout: 600000 # 连接超时的最大时长（毫秒），超时则被释放（retired），默认:10分钟
+      idle-timeout: 600000 # 连接超时的最大时长（毫秒）
       pool-name: DateSourceHikariCP # 连接池名字
-      max-lifetime: 1800000 # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟
+      max-lifetime: 1800000 # 连接的生命时长（毫秒）
       connection-test-query: SELECT 1
 
-#kafka:
-#  bootstrap-server: 192.168.43.201:9092
 ############################################################
-# #mybatis 配置
-# #
+# #mybatis / mybatis-plus 配置
 ###########################################################
 mybatis:
-  type-aliases-package: com.template.pojo # 所有POJO类所在包路径
-  mapper-locations: classpath:mappings/*.xml # mapper映射文件
+  type-aliases-package: org.template.pojo # 所有POJO类所在包路径
+  mapper-locations: classpath*:mappings/*.xml # mapper映射文件（classpath* 兼容打jar后多包扫描）
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+############################################################
+# #国密(SM4)单密钥配置（无密钥分片）
+# #密钥本身绝不写在 yml / 代码 / Git 中，只来自环境变量或密钥文件：
+# #  1) 环境变量 SM4_KEY（推荐 K8s Secret / 运维保险柜注入）
+# #  2) sm4.key-file 密钥文件（内容即密钥材料，权限必须 600，仅属主可读写）
+# #  优先级：key-file 非空且存在 -> 用文件，否则用环境变量；密钥材料经 SM3 派生 16 字节 SM4 密钥
+###########################################################
+sm4:
+  enabled: true # 生产必须 true；false 仅本地开发允许明文
+  key-env: SM4_KEY # 密钥材料所在环境变量名
+  key-file: "" # 如 /run/secrets/sm4.key，为空表示用环境变量
+  strict-file-permission: true # 密钥文件非 600 则拒绝启动
+  log-key-loaded: false # 仅打印"密钥已加载"，绝不打印密钥内容
+
 logging:
   level:
-    sql: debug
+    root: info
     org.template.mapper: debug

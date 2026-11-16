@@ -21,7 +21,7 @@ import java.util.Map;
  * @Description:
  **********************************/
 @ExtendWith(SpringExtension.class)
-@SpringBootTest(classes = Runner.class)
+@SpringBootTest(classes = TemplateRunner.class)
 public class mybatistest {
 
     @Autowired
