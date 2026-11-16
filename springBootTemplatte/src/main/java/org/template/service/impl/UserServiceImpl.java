@@ -11,7 +11,7 @@ import org.template.mapper.UserMapper;
 import org.template.pojo.User;
 import org.template.service.IUserService;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**
  * @author: zhang zhao lin

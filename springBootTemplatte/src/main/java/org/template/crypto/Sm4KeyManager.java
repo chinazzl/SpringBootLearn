@@ -1,5 +1,6 @@
 package org.template.crypto;
 
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,9 @@ import java.util.function.Supplier;
  * 密钥材料经 SM3 摘要取前 16 字节派生为 SM4-128 密钥，派生后立即擦除原始材料。
  */
 @Component
+@Slf4j
 public class Sm4KeyManager implements DisposableBean {
 
-    private static final Logger log = LoggerFactory.getLogger(Sm4KeyManager.class);
 
     private final Sm4Properties properties;
     private final boolean strictFilePermission;
@@ -183,19 +184,20 @@ public class Sm4KeyManager implements DisposableBean {
     /**
      * SM3(密钥材料) 取前 16 字节作为 SM4-128 密钥。
      * 任意长度材料均可，避免“密钥必须是 16 字节可打印字符”的弱约束。
+     *
+     * <p>确定性函数：相同材料必然得到相同密钥（这是数据可解密的前提）。
+     *
+     * <p><b>所有权约定</b>：{@code material} 由调用方持有，本方法<b>不</b>擦除它，
+     * 调用方使用完毕后必须自行 {@code Arrays.fill(material, (byte) 0)}。
      */
     static byte[] deriveSm4Key(byte[] material) {
-        try {
-            org.bouncycastle.crypto.digests.SM3Digest digest = new org.bouncycastle.crypto.digests.SM3Digest();
-            digest.update(material, 0, material.length);
-            byte[] hash = new byte[digest.getDigestSize()];
-            digest.doFinal(hash, 0);
-            byte[] key = Arrays.copyOf(hash, 16);
-            Arrays.fill(hash, (byte) 0);
-            return key;
-        } finally {
-            // 调用方负责擦除 material
-        }
+        org.bouncycastle.crypto.digests.SM3Digest digest = new org.bouncycastle.crypto.digests.SM3Digest();
+        digest.update(material, 0, material.length);
+        byte[] hash = new byte[digest.getDigestSize()];
+        digest.doFinal(hash, 0);
+        byte[] key = Arrays.copyOf(hash, 16);
+        Arrays.fill(hash, (byte) 0);
+        return key;
     }
 
     /** 返回密钥副本，调用方用完应立即擦除；返回副本避免外部篡改常驻密钥 */

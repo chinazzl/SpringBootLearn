@@ -7,7 +7,7 @@ import org.template.dto.QueryBO;
 import org.template.dto.ResultResponse;
 import org.template.service.BasicQuery;
 
-import javax.annotation.Resource;
+import jakarta.annotation.Resource;
 
 /**********************************
  * @author zhang zhao lin

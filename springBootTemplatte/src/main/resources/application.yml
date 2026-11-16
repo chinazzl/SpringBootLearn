@@ -4,8 +4,8 @@ server:
 spring:
   datasource: # 数据源的相关配置（单数据源，HikariCP），由 SecureDataSourceConfig 显式建池
     type: com.zaxxer.hikari.HikariDataSource # 数据源类型：HikariCP
-    driver-class-name: oracle.jdbc.driver.OracleDriver # oracle驱动
-    url: jdbc:oracle:thin:@localhost:1521:xe
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/springboottemplate?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai&useSSL=false&allowPublicKeyRetrieval=true
     # 用户名/口令只允许以下两种形态，username/password 都要加密：
     #   SM4(Base64) -> 启动时经国密 SM4 解密（生产唯一允许形态）
     #   明文         -> 仅 sm4.enabled=false 的本地开发允许，生产直接拒绝启动
@@ -21,13 +21,29 @@ spring:
       max-lifetime: 1800000 # 连接的生命时长（毫秒）
       connection-test-query: SELECT 1
 
+  ############################################################
+  # #Kafka 配置
+  # #Spring Boot 4 的 Kafka 自动配置已拆分到 spring-boot-kafka 模块
+  # #consumer.group-id 必填，否则 @KafkaListener 启动时抛
+  # #"No group.id found in consumer config, container properties, or @KafkaListener annotation"
+  ###########################################################
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: springboottemplate-group
+      auto-offset-reset: earliest
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
 ############################################################
-# #mybatis / mybatis-plus 配置
+# #mybatis-plus 配置
+# #注意：mybatis-plus 的配置前缀只有 "mybatis-plus"，
+# #      旧的 "mybatis:" 前缀来自 mybatis-spring-boot-starter（已移除），不再生效
 ###########################################################
-mybatis:
+mybatis-plus:
   type-aliases-package: org.template.pojo # 所有POJO类所在包路径
   mapper-locations: classpath*:mappings/*.xml # mapper映射文件（classpath* 兼容打jar后多包扫描）
-mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
@@ -42,8 +58,6 @@ sm4:
   enabled: true # 生产必须 true；false 仅本地开发允许明文
   key-env: SM4_KEY # 密钥材料所在环境变量名
   key-file: "" # 如 /run/secrets/sm4.key，为空表示用环境变量
-  strict-file-permission: true # 密钥文件非 600 则拒绝启动
-  log-key-loaded: false # 仅打印"密钥已加载"，绝不打印密钥内容
 
 logging:
   level:

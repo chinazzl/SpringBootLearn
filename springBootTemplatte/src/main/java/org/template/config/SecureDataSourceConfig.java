@@ -9,7 +9,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.template.crypto.SensitiveMaskUtils;
 import org.template.crypto.Sm4CipherService;
 import org.template.crypto.Sm4Properties;
@@ -105,9 +107,28 @@ public class SecureDataSourceConfig {
         }
     }
 
+    /**
+     * 事务管理器。
+     *
+     * <p>返回类型必须是 {@link DataSourceTransactionManager}（而不是抽象的
+     * {@link PlatformTransactionManager}）：{@code @Resource} 按类型注入时，
+     * 只有当容器里 bean 的实际类型可赋值给注入点声明的类型时才会匹配。
+     * 抽象类型声明会让人按具体实现类注入时匹配失败。
+     */
     @Bean
-    public PlatformTransactionManager transactionManager(DataSource dataSource) {
+    public DataSourceTransactionManager transactionManager(DataSource dataSource) {
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    /**
+     * 默认事务定义（传播行为、隔离级别、超时等）。
+     *
+     * <p>Spring Boot 不会自动注册 {@link TransactionDefinition} 类型的 bean，
+     * 需要业务代码按类型注入时必须显式提供。
+     */
+    @Bean
+    public TransactionDefinition transactionDefinition() {
+        return new DefaultTransactionDefinition();
     }
 
     /**
